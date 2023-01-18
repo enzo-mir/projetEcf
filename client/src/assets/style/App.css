@@ -103,6 +103,7 @@ section {
 body {
   line-height: 1;
 }
+
 ol,
 ul {
   list-style: none;
@@ -126,4 +127,15 @@ table {
 :root {
   --font-f-julius: "Julius Sans One", sans-serif;
   --font-f-italian: "Italiana", serif;
+  --font-size: clamp(13px, 1.5vw, 20px);
+  --font-size-bigger: clamp(20px, 4vw, 30px);
+  --font-size-h1: clamp(20px, 7.5vw, 60px);
+  --primary-color: #ffebcc;
+  --primary-color-a50: hsla(36, 100%, 90%, 0.5);
+  --primary-color-a30: hsla(36, 100%, 90%, 0.3);
+  --darker-color: #906527;
+  --darker-color-a70: hsla(35, 57%, 36%, 0.7);
+  --darker-color-a30: hsla(35, 57%, 36%, 0.3);
+  --color-whiteless: rgba(255, 255, 255, 0.5);
+  --color-blackless: rgba(0, 0, 0, 0.5);
 }

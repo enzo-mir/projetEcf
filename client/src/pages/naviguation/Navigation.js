@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Home from "../Home";
 import Carte from "../Carte";
@@ -11,8 +11,8 @@ import PrivateRoute from "./PrivateRoute";
 const Navigation = () => {
   return (
     <>
-      <Header />
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/carte" element={<Carte />} />
@@ -21,8 +21,8 @@ const Navigation = () => {
             <Route path="/admin/config" element={<AdminConfig />} />
           </Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </>
   );
 };

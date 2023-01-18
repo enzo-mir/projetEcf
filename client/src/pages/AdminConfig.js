@@ -5,7 +5,6 @@ const AdminConfig = () => {
   return (
     <>
       <div>AdminConfig</div>
-      <Outlet />
     </>
   );
 };
