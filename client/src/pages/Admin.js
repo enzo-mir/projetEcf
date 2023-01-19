@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import fetching from "../data/fetchAdminLogs";
 
 function Admin() {
   const [query, setQuery] = useState(null);
@@ -10,7 +9,7 @@ function Admin() {
     <>
       <div>
         <h1>Admin</h1>
-        <button onClick={() => setQuery(fetching("ok"))}>ok</button>
+        <button onClick={() => setQuery()}>ok</button>
       </div>
     </>
   );
