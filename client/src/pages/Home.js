@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <>
       <Wrapper>
-        {res ? <Reserv /> : null}
+        {res && <Reserv res={setRes} />}
         <HeroSection>
           <div className="headerPage">
             <img src={heroImage} alt="accueil" />
@@ -20,8 +20,8 @@ const Home = () => {
           <ContextText>
             <p>
               Venez découvrir la Savoie à travers une expérience gastronomique,
-              installé à Chambéry, Le Quai Antique saurra vous satisfaire tout
-              au long de votre repas
+              installé à Chambéry, Le Quai Antique saura vous satisfaire tout
+              au long de votre repas.
             </p>
           </ContextText>
         </HeroSection>

@@ -6,16 +6,6 @@ import { query } from "../../data/fetchAllData";
 const Footer = () => {
   const [fet, setFet] = useState([]);
 
-  function placeHours(lunch, dinner) {
-    return lunch === "fermer"
-      ? dinner === "fermer"
-        ? "fermer"
-        : `${dinner}`
-      : dinner === "fermer"
-      ? "fermer"
-      : `${lunch} et ${dinner}`;
-  }
-
   useEffect(() => {
     query().then((data) => setFet(data.heures));
   }, []);
