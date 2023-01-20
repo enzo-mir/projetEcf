@@ -62,11 +62,12 @@ app.get("/api", (req, res) => {
   /* CREATE NEW TABLE FOR RESERVATION */
 
   connectionNew.query(
-    "CREATE TABLE IF NOT EXISTS `reserver` (`id` INT AUTO_INCREMENT primary key NOT NULL,`hours` varchar(255) NOT NULL,`convive` int(10) SIGNED NOT NULL,`alergie` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+    "CREATE TABLE IF NOT EXISTS `reserver` (`id` INT AUTO_INCREMENT primary key NOT NULL,`convive` int(10) SIGNED NOT NULL,`date` DATE NOT NULL,`heures` varchar(255) NOT NULL,`nom` varchar(255) NOT NULL,`email` varchar(255) NOT NULL  ,`alergie` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
     (error, result) => {
       error ? console.log(error) : null;
     }
   );
+
   /* CREATE NEW TABLE FOR HOURS */
 
   connectionNew.query(
@@ -105,6 +106,26 @@ app.get("/api", (req, res) => {
       });
     });
   });
+});
+
+/* GET (TYPE :OBJ) reservation  */
+
+app.post("/res", async (req, res) => {
+  /* NEW CONNECTION FOR INSERTION IN RESERVATION TABLE */
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+
+  let response = req.body;
+  let values = Object.values(response);
+  console.log(values);
+
+  connectionNew.query(
+    `INSERT INTO reserver (id, convive, date, heures, nom, email, alergie) VALUES (null,${values[0]},"${values[1]}","${values[4]}","${values[3]}","${values[2]}","${values[5]}")`
+  );
 });
 
 app.listen(PORT, () => {

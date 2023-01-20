@@ -6,28 +6,30 @@ import Reserv from "./Reserv";
 
 const Header = () => {
   return (
-    <Wrapper>
-      <div className="imgContainer">
-        <img src={icon} alt="Icon du site" />
-      </div>
-      <nav className="navBar">
-        <ul>
-          <li>
-            <Link to="/">Accueil</Link>
-          </li>
-          <li>
-            <Link to="/carte">Carte</Link>
-          </li>
-          <li>
-            <button className="btnReserve">Réserver</button>
-          </li>
-        </ul>
-      </nav>
-      <div className="profil">
-        <button>Inscription</button>
-        <button>Connexion</button>
-      </div>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <div className="imgContainer">
+          <img src={icon} alt="Icon du site" />
+        </div>
+        <nav className="navBar">
+          <ul>
+            <li>
+              <Link to="/">Accueil</Link>
+            </li>
+            <li>
+              <Link to="/carte">Carte</Link>
+            </li>
+            <li>
+              <button className="btnReserve">Réserver</button>
+            </li>
+          </ul>
+        </nav>
+        <div className="profil">
+          <button>Inscription</button>
+          <button>Connexion</button>
+        </div>
+      </Wrapper>
+    </>
   );
 };
 

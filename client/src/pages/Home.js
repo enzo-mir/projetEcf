@@ -7,6 +7,13 @@ import Reserv from "./components/Reserv";
 
 const Home = () => {
   const [res, setRes] = useState(false);
+  window.onload = () => {
+    document.querySelectorAll(".btnReserve").forEach((resBtn) => {
+      resBtn.addEventListener("click", () => {
+        setRes(true);
+      });
+    });
+  };
 
   return (
     <>
@@ -20,8 +27,8 @@ const Home = () => {
           <ContextText>
             <p>
               Venez découvrir la Savoie à travers une expérience gastronomique,
-              installé à Chambéry, Le Quai Antique saura vous satisfaire tout
-              au long de votre repas.
+              installé à Chambéry, Le Quai Antique saura vous satisfaire tout au
+              long de votre repas.
             </p>
           </ContextText>
         </HeroSection>
@@ -34,14 +41,7 @@ const Home = () => {
             <br />
             Venez à table !
           </p>
-          <button
-            className="btnReserve"
-            onClick={() => {
-              setRes(true);
-            }}
-          >
-            Réservez une table
-          </button>
+          <button className="btnReserve">Réservez une table</button>
         </SectionPlats>
       </Wrapper>
     </>

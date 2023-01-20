@@ -4,21 +4,33 @@ import downArrowCalendar from "../../assets/images/down-arrow.ico";
 import calendar from "../../assets/images/calendar.png";
 import guests from "../../assets/images/guests.png";
 import { query } from "../../data/fetchAllData";
+import postReservation from "../../data/postReservation";
+import Allergie from "./Allergie";
 
 export default function Reserv({ res }) {
   const [fet, setFet] = useState([]);
+  const [dayDate, setDayDate] = useState(null);
   const [date, setDate] = useState(null);
   const [guests, setGuests] = useState(1);
+  const [email, setEmail] = useState();
+  const [name, setName] = useState();
+  const [resError, setResError] = useState("");
+  const [showAllergy, setShowAllergy] = useState(false);
+  const [allergy, setAlergy] = useState();
 
   useEffect(() => {
     query().then((data) => setFet(data.heures));
   }, []);
 
   function handleChangeDate(e) {
-    let date = new Date(e.target.value).toLocaleDateString("fr-FR", {
+    let dateDay = new Date(e.target.value).toLocaleDateString("fr-FR", {
       weekday: "long",
     });
-    setDate(date);
+    
+    let fullDate = new Date(e.target.value).toLocaleDateString("fr-CA");
+
+    setDate(fullDate);
+    setDayDate(dateDay);
   }
   let lunchTable = ["12h", "12h15", "12h30", "12h45", "13h", "13h15", "13h30"];
   let dinnerTable = ["19h", "19h15", "19h30", "19h45", "20h", "20h15", "20h30"];
@@ -35,25 +47,20 @@ export default function Reserv({ res }) {
     "21h30",
   ];
   function selectHours(e) {
-    let value = e.target.textContent;
-    let target = e.target;
-    target.classList.add("selected");
+    let oldTarget = document.querySelector(".selected");
+    // eslint-disable-next-line no-unused-expressions
+    oldTarget ? oldTarget.removeAttribute("class") : null;
+    setTimeout(() => {
+      let target = e.target;
+      target.classList.add("selected");
+    }, 200);
   }
   function returnData(time) {
     switch (time) {
       case "12H - 14H":
         return lunchTable.map((lunch, id) => {
           return (
-            <button
-              key={id}
-              onClick={selectHours}
-              tabIndex={id}
-              onBlur={(e) =>
-                setTimeout(() => {
-                  e.target.removeAttribute("class");
-                }, 200)
-              }
-            >
+            <button key={id} onFocus={selectHours} tabIndex={id}>
               {lunch}
             </button>
           );
@@ -61,16 +68,7 @@ export default function Reserv({ res }) {
       case "19H - 22H":
         return dinnerTable.map((dinner, id) => {
           return (
-            <button
-              key={id}
-              onClick={selectHours}
-              tabIndex={id + 7}
-              onBlur={(e) =>
-                setTimeout(() => {
-                  e.target.removeAttribute("class");
-                }, 200)
-              }
-            >
+            <button key={id} onClick={selectHours} tabIndex={id + 7}>
               {dinner}
             </button>
           );
@@ -78,16 +76,7 @@ export default function Reserv({ res }) {
       case "19H - 23H":
         return saturdayTable.map((dinner, id) => {
           return (
-            <button
-              key={id}
-              onClick={selectHours}
-              tabIndex={id + 7}
-              onBlur={(e) =>
-                setTimeout(() => {
-                  e.target.removeAttribute("class");
-                }, 200)
-              }
-            >
+            <button key={id} onClick={selectHours} tabIndex={id + 7}>
               {dinner}
             </button>
           );
@@ -99,15 +88,58 @@ export default function Reserv({ res }) {
     }
   }
 
+  const ErrorReservation = () => {
+    return <p>{resError}</p>;
+  };
+
   function submitReservation(e) {
-    let hourTargeted = document.querySelector(".selected");
-    console.log(hourTargeted);
+    let hourTargeted = document.querySelector(".selected")
+      ? document.querySelector(".selected").textContent
+      : null;
+
+    if (guests > 0 && guests < 10) {
+      if (date !== null) {
+        if (email !== undefined) {
+          if (name !== undefined) {
+            if (hourTargeted !== null) {
+              if (allergy) {
+                setResError("Votre réservation à bien été pris en compte");
+                postReservation(
+                  guests,
+                  date,
+                  email,
+                  name,
+                  hourTargeted,
+                  allergy
+                );
+                e.target.style.pointerEvents = "none";
+
+                setTimeout(() => {
+                  e.target.style.pointerEvents = "auto";
+                  res(false);
+                }, 2000);
+              } else {
+                setResError("Votre réservation à bien été pris en compte");
+                postReservation(guests, date, email, name, hourTargeted, "");
+                e.target.style.pointerEvents = "none";
+
+                setTimeout(() => {
+                  e.target.style.pointerEvents = "auto";
+                  res(false);
+                }, 2000);
+              }
+            } else setResError("Choisissez une heure de réservation");
+          } else setResError("Veuillez renseignez un nom de réservation");
+        } else setResError("Veuillez renseignez votre adresse e-mail");
+      } else setResError("Choisissez une date de réservation");
+    } else setResError("Le nombre de convives doit être compris entre 1 et 9");
   }
 
   return (
     <Overlay onClick={() => res(false)}>
       <ReservationContainer onClick={(e) => e.stopPropagation()}>
         <h1>Réservez votre table</h1>
+        {resError ? <ErrorReservation /> : null}
         <OptionsReserv>
           <span></span>
           <input
@@ -132,12 +164,18 @@ export default function Reserv({ res }) {
             id="email"
             required
             placeholder="Entrez votre e-mail"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <input
             type="text"
             id="name"
             required
             placeholder="Entrez votre nom"
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
           />
         </OptionsReserv>
         <div id="lunchHours">
@@ -146,14 +184,14 @@ export default function Reserv({ res }) {
             <HoursList>
               {fet.map((data) => {
                 // eslint-disable-next-line no-unused-expressions
-                return data.day === date
-                  ? date === "lundi" ||
-                    date === "mardi" ||
-                    date === "jeudi" ||
-                    date === "mercredi" ||
-                    date === "vendredi" ||
-                    date === "samedi" ||
-                    date === "dimanche"
+                return data.day === dayDate
+                  ? dayDate === "lundi" ||
+                    dayDate === "mardi" ||
+                    dayDate === "jeudi" ||
+                    dayDate === "mercredi" ||
+                    dayDate === "vendredi" ||
+                    dayDate === "samedi" ||
+                    dayDate === "dimanche"
                     ? returnData(data.lunch)
                     : null
                   : null;
@@ -166,14 +204,14 @@ export default function Reserv({ res }) {
           <div className="hours">
             <HoursList>
               {fet.map((data) => {
-                return data.day === date
-                  ? date === "lundi" ||
-                    date === "mardi" ||
-                    date === "jeudi" ||
-                    date === "mercredi" ||
-                    date === "vendredi" ||
-                    date === "samedi" ||
-                    date === "dimanche"
+                return data.day === dayDate
+                  ? dayDate === "lundi" ||
+                    dayDate === "mardi" ||
+                    dayDate === "jeudi" ||
+                    dayDate === "mercredi" ||
+                    dayDate === "vendredi" ||
+                    dayDate === "samedi" ||
+                    dayDate === "dimanche"
                     ? returnData(data.dinner)
                     : null
                   : null;
@@ -181,7 +219,22 @@ export default function Reserv({ res }) {
             </HoursList>
           </div>
         </div>
-        <button onClick={submitReservation}>Réservez la table</button>
+        <div id="finalCase">
+          <p
+            onClick={(e) => {
+              setShowAllergy(!showAllergy);
+              setAlergy("");
+            }}
+          >
+            Allergie(s) ?
+          </p>
+          {showAllergy ? (
+            <Allergie onchange={(e) => setAlergy(e.target.value)} />
+          ) : null}
+          <button type="submit" onClick={submitReservation}>
+            Réservez la table
+          </button>
+        </div>
       </ReservationContainer>
     </Overlay>
   );
@@ -216,8 +269,8 @@ const ReservationContainer = styled.div`
     text-align: center;
   }
 
-  & div:nth-child(3),
-  & div:nth-child(4) {
+  & #lunchHours,
+  & #dinerHours {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -228,6 +281,21 @@ const ReservationContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  & #finalCase {
+    position: relative;
+    display: grid;
+    place-items: center;
+    grid-template-columns: auto auto;
+    gap: 50px;
+    & p:hover {
+      cursor: pointer;
+    }
+
+    &:has(div) button {
+      grid-area: 2 / 1 / 3 / 3;
+    }
   }
 `;
 
