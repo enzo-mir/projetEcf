@@ -77,7 +77,41 @@ app.get("/api", (req, res) => {
     }
   );
 
-  /* SQL REQUEST HOURS */
+  /* CREATE NEW TABLE FOR CARTE */
+
+  //ENTRÉES
+  connectionNew.query(
+    "CREATE TABLE IF NOT EXISTS `menu` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`formule` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+    (error, result) => {
+      error ? console.log(error) : null;
+    }
+  );
+
+  //ENTRÉES
+  connectionNew.query(
+    "CREATE TABLE IF NOT EXISTS `entree` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`prix` INT,`partage` BOOL NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+    (error, result) => {
+      error ? console.log(error) : null;
+    }
+  );
+
+  //PLATS
+  connectionNew.query(
+    "CREATE TABLE IF NOT EXISTS `plat` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`prix` INT,`partage` BOOL NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+    (error, result) => {
+      error ? console.log(error) : null;
+    }
+  );
+
+  //DESSERTS
+  connectionNew.query(
+    "CREATE TABLE IF NOT EXISTS `dessert` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`prix` INT) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+    (error, result) => {
+      error ? console.log(error) : null;
+    }
+  );
+
+  /* SQL REQUEST INSERTION HOURS */
   connectionNew.query(
     "INSERT IGNORE INTO `heures` (`id`, `day`,`lunch`, `dinner`) VALUES (1,'lundi','12H - 14H','19H - 22H'),(2,'mardi','12H - 14H','19H - 22H'),(3,'mercredi','fermer','fermer'),(4,'jeudi','12H - 14H','19H - 22H'),(5,'vendredi','12H - 14H','19H - 22H'),(6,'samedi','fermer','19H - 23H'),(7,'dimanche','12H - 14H','fermer')",
     (error, result) => {
