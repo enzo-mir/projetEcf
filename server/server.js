@@ -79,11 +79,19 @@ app.get("/api", (req, res) => {
 
   /* CREATE NEW TABLE FOR CARTE */
 
-  //ENTRÉES
+  //MENUS
   connectionNew.query(
     "CREATE TABLE IF NOT EXISTS `menu` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`formule` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
     (error, result) => {
       error ? console.log(error) : null;
+      if (result) {
+        connectionNew.query(
+          "INSERT IGNORE INTO `menu` (`id`, `nom`, `formule`) VALUES (1,'menu du marché','entrée + plat 30€,plat + dessert 26€'),(2,'menu du montagnard (soirs)','entrée + tartiflette(1 pers) 30€,entrée + plat + dessert 34€')",
+          (err, result) => {
+            err ? console.log(err) : null;
+          }
+        );
+      }
     }
   );
 
@@ -92,6 +100,11 @@ app.get("/api", (req, res) => {
     "CREATE TABLE IF NOT EXISTS `entree` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`prix` INT,`partage` BOOL NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
     (error, result) => {
       error ? console.log(error) : null;
+      if (result) {
+        connectionNew.query(
+          "INSERT IGNORE INTO `entree` (`id`, `nom`, `description`, `prix`, `partage`) VALUES (1,'la salade Savoyarde','salade traditionnelle au chèvre chaud', '12', FALSE),(2,'assortiment de charcuterie','assortiment de jambon de la région', '13', FALSE),(3,'crousti-camembert','camembert coulant enrobé avec une chapelure', '16', TRUE),(4,'friands savoyards','pate feuilletée au coeur fondant', '15', TRUE)"
+        );
+      }
     }
   );
 
@@ -100,6 +113,11 @@ app.get("/api", (req, res) => {
     "CREATE TABLE IF NOT EXISTS `plat` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`prix` INT,`partage` BOOL NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
     (error, result) => {
       error ? console.log(error) : null;
+      if (result) {
+        connectionNew.query(
+          "INSERT IGNORE INTO `plat` (`id`, `nom`, `description`, `prix`, `partage`) VALUES (1,'entrcôte (230 gr)','entrcôte de boeuf avec son beurre fermier', '23', FALSE),(2,'camembert au four','camembert fondant entaillé et cuit au four', '18', FALSE),(3,'raclette party','fromage exceptionnel pour un moment familial', '30', TRUE),(4,'fondue savoyardes','cuve de fromage fondus à déguster entre amis', '28', TRUE)"
+        );
+      }
     }
   );
 
@@ -108,6 +126,11 @@ app.get("/api", (req, res) => {
     "CREATE TABLE IF NOT EXISTS `dessert` (`id` INT AUTO_INCREMENT primary key NOT NULL,`nom` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`prix` INT) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
     (error, result) => {
       error ? console.log(error) : null;
+      if (result) {
+        connectionNew.query(
+          "INSERT IGNORE INTO `dessert` (`id`, `nom`, `description`, `prix`) VALUES (1,'mousse au chocolat','mousse au chocolat praliné des produits locaux', '6'),(2,'café gourmand','café accompagné de une boule de glace a la vanille', '8'),(3,'tarte tatin','tarte tatin aux pommes onctueuses', '7'),(4,'crème brûlée','crème brûlée caramélisée', '8')"
+        );
+      }
     }
   );
 
