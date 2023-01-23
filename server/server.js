@@ -165,6 +165,29 @@ app.get("/api", (req, res) => {
   });
 });
 
+app.get("/carteapi", (req, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+
+  connectionNew.query("SELECT * FROM `entree`", (error, entree) => {
+    error ? console.log(error) : null;
+    connectionNew.query("SELECT * FROM `plat`", (error, plat) => {
+      error ? console.log(error) : null;
+      connectionNew.query("SELECT * FROM `dessert`", (error, dessert) => {
+        error ? console.log(error) : null;
+        connectionNew.query("SELECT * FROM `menu`", (error, menu) => {
+          error ? console.log(error) : null;
+          res.send({ entree, plat, dessert, menu });
+        });
+      });
+    });
+  });
+});
+
 /* GET (TYPE :OBJ) reservation  */
 
 app.post("/res", async (req, res) => {

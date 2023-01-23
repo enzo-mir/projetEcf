@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import icon from "../../assets/images/icon.svg";
-import Reserv from "./Reserv";
 
 const Header = () => {
   return (
