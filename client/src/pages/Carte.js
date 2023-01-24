@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import { carteQuery } from "../data/fetchCarteData";
+import Reserv from "./components/Reserv";
 
 export default function Carte() {
   const [carteFetched, setCarteFetched] = useState();
@@ -8,8 +9,14 @@ export default function Carte() {
   const [plat, setPlat] = useState();
   const [dessert, setDessert] = useState();
   const [menu, setMenu] = useState();
+  const [res, setRes] = useState(false);
 
   useEffect(() => {
+    document.querySelectorAll(".btnReserve").forEach((resBtn) => {
+      resBtn.addEventListener("click", () => {
+        setRes(true);
+      });
+    });
     carteQuery().then((data) => {
       setCarteFetched(data);
       setEntree(data.entree);
@@ -94,6 +101,7 @@ export default function Carte() {
 
   return carteFetched !== undefined ? (
     <>
+      {res && <Reserv res={setRes} />}
       <CarteContainer>
         <h1>La carte des menus</h1>
         <MenuContainer>
