@@ -53,6 +53,7 @@ const Footer = () => {
 };
 
 const Wrapper = styled.footer`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,7 +62,7 @@ const Wrapper = styled.footer`
   height: 100%;
   font-size: var(--font-size);
   row-gap: 5vh;
-  margin-top: 100px;
+  margin-top: 150px;
 
   & #horaires {
     display: flex;

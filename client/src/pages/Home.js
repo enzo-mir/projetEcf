@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import heroImage from "../assets/images/heroImage.jpg";
 import img1 from "../assets/images/quelle-specialite-savoie.jpg";
@@ -7,13 +7,14 @@ import Reserv from "./components/Reserv";
 
 const Home = () => {
   const [res, setRes] = useState(false);
-  window.onload = () => {
+
+  useEffect(() => {
     document.querySelectorAll(".btnReserve").forEach((resBtn) => {
       resBtn.addEventListener("click", () => {
         setRes(true);
       });
     });
-  };
+  }, []);
 
   return (
     <>

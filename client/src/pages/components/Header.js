@@ -40,7 +40,6 @@ const Wrapper = styled.header`
   justify-content: space-between;
   align-items: center;
   background-color: var(--primary-color);
-  backdrop-filter: blur(5px);
   z-index: 50;
 
   & .imgContainer {

@@ -128,9 +128,10 @@ table {
   --font-f-julius: "Julius Sans One", sans-serif;
   --font-f-italian: "Italiana", serif;
   --font-size: clamp(13px, 1.5vw, 20px);
-  --font-size-bigger: clamp(15px, 3vw, 30px);
+  --font-size-bigger: clamp(18px, 3vw, 30px);
   --font-size-h1: clamp(20px, 7.5vw, 60px);
   --font-size-reg: clamp(15px, 2vw, 20px);
+  --font-size-little: clamp(10px, 2vw, 14px);
   --primary-color: #ffebcc;
   --primary-color-a50: hsla(36, 100%, 90%, 0.5);
   --primary-color-a30: hsla(36, 100%, 90%, 0.3);

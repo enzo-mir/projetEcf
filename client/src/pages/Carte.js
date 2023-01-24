@@ -20,26 +20,31 @@ export default function Carte() {
   }, []);
 
   function mapingSimilarityFood(food, title) {
-    var regexComaString = /[,]/g;
     return food === entree || food === plat ? (
       <>
-        <h1>{title}</h1>
+        <h2>{title}</h2>
         <div className="noshare">
           {food.map((element, id) => {
             return !element.partage ? (
               <div key={id}>
-                <p>{element.nom}</p>
+                <div>
+                  <p>{element.nom}</p>
+                  <p className="desc">{element.description}</p>
+                </div>
                 <p>{element.prix}€</p>
               </div>
             ) : null;
           })}
         </div>
         <div className="share">
-          <h1>à partager (ou pas . . .)</h1>
+          <h2>à partager (ou pas . . .)</h2>
           {food.map((element, id) => {
             return element.partage ? (
               <div key={id}>
-                <p>{element.nom}</p>
+                <div>
+                  <p>{element.nom}</p>
+                  <p className="desc">{element.description}</p>
+                </div>
                 <p>{element.prix}€</p>
               </div>
             ) : null;
@@ -48,11 +53,14 @@ export default function Carte() {
       </>
     ) : food === dessert ? (
       <>
-        <h1>{title}</h1>
+        <h2>{title}</h2>
         {food.map((element, id) => {
           return (
             <div key={id}>
-              <p>{element.nom}</p>
+              <div>
+                <p>{element.nom}</p>
+                <p className="desc">{element.description}</p>
+              </div>
               <p>{element.prix}€</p>
             </div>
           );
@@ -60,13 +68,13 @@ export default function Carte() {
       </>
     ) : (
       <>
-        <h1>{title}</h1>
+        <h2>{title}</h2>
         {food.map((element, id) => {
           return (
             <div key={id}>
-              <h2>{element.nom}</h2>
+              <p>{element.nom}</p>
               <article>
-                <p>Formule : </p>
+                <p>Formules : </p>
                 <aside>
                   {element.formule.split(",").map((formule, index) => {
                     return (
@@ -106,35 +114,180 @@ export default function Carte() {
 }
 
 const CarteContainer = styled.main`
+  position: relative;
   width: 1000px;
   margin: auto;
-  height: 100vh;
-  padding-block: 100px;
+  min-height: max-content;
+  padding-block: 150px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2vw;
+  background-color: var(--primary-color);
+  padding-inline: 2vw;
+
+  & h1 {
+    position: relative;
+    font-size: var(--font-size-h1);
+    display: grid;
+    place-items: center;
+    width: max-content;
+
+    ::after,
+    ::before {
+      content: "";
+      position: absolute;
+      width: clamp(10px, 1.5vw, 15px);
+      height: clamp(10px, 1.5vw, 15px);
+      background-color: black;
+      border-radius: 50%;
+    }
+    ::after {
+      right: 0;
+      transform: translateX(200%);
+    }
+    ::before {
+      left: 0;
+      transform: translateX(-200%);
+    }
+  }
+
+  & h2 {
+    font-size: var(--font-size-bigger);
+    color: var(--darker-color);
+  }
+
+  .desc {
+    font-size: var(--font-size-little);
+    color: var(--darker-color);
+  }
 `;
 
 const MenuContainer = styled.div`
+  position: relative;
   width: 1000px;
-  margin: auto;
-  height: 100vh;
+  min-height: max-content;
   display: grid;
-  gap: 20px;
+  gap: 25px;
   grid-template-columns: repeat(2, 1fr);
+
+  & > div {
+    width: 100%;
+    height: 100%;
+    margin-block: 50px;
+
+    & p {
+      text-align: left;
+      width: 100%;
+      font-size: var(--font-size-reg);
+    }
+  }
 `;
 
 const LunchSection = styled.div`
-  background-color: red;
+  background-color: #fff;
   grid-area: 1 / 1 / 2 / 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+
+  & > div {
+    min-width: max-content;
+    width: 80%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+
+    > div {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      column-gap: 20px;
+      width: 100%;
+    }
+  }
 `;
 const PlatSection = styled.div`
-  background-color: red;
+  background-color: #fff;
   grid-area: 1 / 2 / 2 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+
+  & > div {
+    min-width: max-content;
+    width: 80%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+
+    > div {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      column-gap: 20px;
+      width: 100%;
+    }
+  }
 `;
 const DessertSection = styled.div`
-  background-color: red;
+  background-color: #fff;
   grid-area: 2 / 1 / 3 / 3;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  column-gap: 50px;
+  place-items: center;
+
+  h2 {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+
+  & > div {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 20px;
+    width: 60%;
+  }
 `;
 const MenuSection = styled.div`
-  background-color: red;
+  background-color: #fff;
   grid-area: 3 / 1 / 4 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  & > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 25px;
+
+    article {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 25px;
+      font-size: var(--font-size);
+
+      > p {
+        color: var(--darker-color);
+        text-align: center;
+      }
+      aside {
+        display: grid;
+        gap: 10px;
+      }
+    }
+  }
 `;
