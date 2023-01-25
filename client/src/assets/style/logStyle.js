@@ -46,6 +46,12 @@ const LogContainer = styled.section`
 const ContentSignIn = styled.div`
   display: grid;
   row-gap: 4vh;
+  & .adds {
+    padding-block: 50px;
+    input {
+      border: 1px solid var(--darker-color);
+    }
+  }
 
   div {
     display: flex;
