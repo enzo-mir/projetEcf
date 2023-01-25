@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 function Admin() {
   const [query, setQuery] = useState(null);
