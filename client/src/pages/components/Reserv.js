@@ -7,7 +7,7 @@ import {
   OptionsReserv,
   ReservationContainer,
   HoursList,
-} from "../../assets/style/rserveStyle";
+} from "../../assets/style/reserveStyle";
 
 export default function Reserv({ res }) {
   const [fet, setFet] = useState([]);

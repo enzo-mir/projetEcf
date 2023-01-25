@@ -20,10 +20,10 @@ const Footer = () => {
             </tr>
           </thead>
           <tbody>
-            {fet.map((elem) => {
+            {fet.map((elem, id) => {
               return (
                 <>
-                  <tr key={elem.id}>
+                  <tr key={id}>
                     <td>{elem.day}</td>
                     <td>{elem.lunch}</td>
                     <td>{elem.dinner}</td>

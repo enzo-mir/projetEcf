@@ -5,10 +5,13 @@ import Log from "../components/Log";
 import { Wrapper } from "../../assets/style/headerStyle";
 
 const Header = () => {
-  const [logPage, setLogPage] = useState("");
+  const [logPage, setLogPage] = useState(false);
+  const [togglePage, setTogglePage] = useState("");
   return (
     <>
-      {logPage !== "" ? <Log page={logPage} /> : null}
+      {logPage ? (
+        <Log displayPage={setLogPage} togglePage={togglePage} />
+      ) : null}
       <Wrapper>
         <div className="imgContainer">
           <img src={icon} alt="Icon du site" />
@@ -30,7 +33,8 @@ const Header = () => {
           <button
             className="signIn"
             onClick={() => {
-              setLogPage("signin");
+              setTogglePage("signin");
+              setLogPage(true);
             }}
           >
             Inscription
@@ -38,7 +42,8 @@ const Header = () => {
           <button
             className="logIn"
             onClick={() => {
-              setLogPage("login");
+              setLogPage(true);
+              setTogglePage("login");
             }}
           >
             Connexion

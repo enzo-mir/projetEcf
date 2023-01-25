@@ -13,7 +13,7 @@ const Overlay = styled.div`
   background-color: var(--color-blackless);
   z-index: 100;
 `;
-const ReservationContainer = styled.div`
+const ReservationContainer = styled.section`
   position: absolute;
   display: grid;
   gap: 5vh;
