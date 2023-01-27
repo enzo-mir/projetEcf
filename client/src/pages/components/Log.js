@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Overlay,
   LogContainer,
   ContentSignIn,
   ContentLogIn,
 } from "../../assets/style/logStyle";
+import postConnection from "../../data/postConnection";
 
 const Log = ({ displayPage, togglePage }) => {
   const [page, setPage] = useState(togglePage);
@@ -14,6 +15,7 @@ const Log = ({ displayPage, togglePage }) => {
   const [signinGuests, setSigninGuests] = useState();
   const [signinAlergy, setSigninAlergy] = useState();
   const [pwdConfirmation, setPwdConfirmation] = useState("");
+  const [fromConfirmation, setFormConfirmation] = useState("");
 
   let signinData = {
     signinName,
@@ -37,12 +39,34 @@ const Log = ({ displayPage, togglePage }) => {
         if (pwdConfirmation === null && values[2]) {
           if (guestsRegex.test(values[3]) && values[3]) {
             if (alergyRegex.test(values[4])) {
-              console.log(values);
-            } else console.log("invalide type of food");
-          } else console.log("guests must be in 1-9");
-        } else console.log("invalide confirm pwd");
-      } else console.log("invalide email");
-    } else console.log("invalide name");
+              postConnection(
+                values[0],
+                values[1],
+                values[2],
+                values[3],
+                values[4]
+              ).then((data) =>
+                Object.keys(data) == "error"
+                  ? setFormConfirmation(Object.values(data))
+                  : displayPage(false)
+              );
+            } else
+              setFormConfirmation(
+                "aucuns caractères spéciaux ni numériques dans les alèrgies"
+              );
+          } else
+            setFormConfirmation(
+              "le nombres de convives doit être entre 1 et 9 compris"
+            );
+        } else
+          setFormConfirmation(
+            pwdConfirmation ? pwdConfirmation : "champs mot de passe vide"
+          );
+      } else setFormConfirmation("email invalide");
+    } else
+      setFormConfirmation(
+        "le champs nom et vide ou comporte autre choses que des lettres"
+      );
   }
 
   return (
@@ -51,6 +75,7 @@ const Log = ({ displayPage, togglePage }) => {
         {page === "signin" ? (
           <>
             <h1>Inscrivez-vous</h1>
+            {fromConfirmation ? <p>{fromConfirmation}</p> : null}
             <ContentSignIn>
               <div className="profil">
                 <input
@@ -73,7 +98,7 @@ const Log = ({ displayPage, togglePage }) => {
                   autoComplete="new-password"
                   onChange={(e) => {
                     setSigninPassword(e.target.value);
-                    e.target.value !== e.target.parentNode.firstChild.value
+                    e.target.value !== e.target.parentNode.children[1].value
                       ? setPwdConfirmation("mot de passe non conforme")
                       : setPwdConfirmation(null);
                   }}

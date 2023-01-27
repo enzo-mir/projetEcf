@@ -165,6 +165,40 @@ app.get("/api", (req, res) => {
   });
 });
 
+app.post("/connectReq", async (request, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+  if (request) {
+    let body = request.body;
+    let nom = await request.body.nom;
+    let email = await request.body.email;
+    let mdp = await request.body.mdp;
+    let convives = await request.body.convives;
+    let alergies = await request.body.alergies;
+    connectionNew.query(
+      `SELECT * FROM connexion WHERE email = "${email}"`,
+      (error, result) => {
+        if (result.length < 1) {
+          connectionNew.query(
+            `INSERT INTO connexion(id, userName, email, password, convive, alergie) VALUES (null,'${nom}','${email}','${mdp}','${convives}','${alergies}')`,
+            (err, success) => {
+              if (success) {
+                res.send(body);
+              }
+            }
+          );
+        } else {
+          res.send({ error: "e-mail déjà pris" });
+        }
+      }
+    );
+  }
+});
+
 app.get("/carteapi", (req, res) => {
   let connectionNew = mysql.createConnection({
     host: "localhost",
@@ -201,7 +235,6 @@ app.post("/res", async (req, res) => {
 
   let response = req.body;
   let values = Object.values(response);
-  console.log(values);
 
   connectionNew.query(
     `INSERT INTO reserver (id, convive, date, heures, nom, email, alergie) VALUES (null,${values[0]},"${values[1]}","${values[4]}","${values[3]}","${values[2]}","${values[5]}")`

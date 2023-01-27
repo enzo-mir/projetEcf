@@ -22,13 +22,11 @@ const Footer = () => {
           <tbody>
             {fet.map((elem, id) => {
               return (
-                <>
-                  <tr key={id}>
-                    <td>{elem.day}</td>
-                    <td>{elem.lunch}</td>
-                    <td>{elem.dinner}</td>
-                  </tr>
-                </>
+                <tr key={id}>
+                  <td>{elem.day}</td>
+                  <td>{elem.lunch}</td>
+                  <td>{elem.dinner}</td>
+                </tr>
               );
             })}
           </tbody>
