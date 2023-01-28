@@ -199,6 +199,26 @@ app.post("/connectReq", async (request, res) => {
   }
 });
 
+app.post("/auth", (req, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+
+  connectionNew.query(
+    `SELECT * FROM connexion WHERE email = "${req.body.email}" AND password = "${req.body.mdp}"`,
+    (error, success) => {
+      if (success.length < 1) {
+        res.send({ erreur: "adresse e-mail ou mot de passe incorrect" });
+      } else {
+        res.send(success).status(200);
+      }
+    }
+  );
+});
+
 app.get("/carteapi", (req, res) => {
   let connectionNew = mysql.createConnection({
     host: "localhost",

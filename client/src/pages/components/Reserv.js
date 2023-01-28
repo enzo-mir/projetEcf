@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { query } from "../../data/fetchAllData";
 import postReservation from "../../data/postReservation";
 import Allergie from "./Allergie";
+import { Overlay } from "../../assets/style/overlay";
 import {
-  Overlay,
   OptionsReserv,
   ReservationContainer,
   HoursList,

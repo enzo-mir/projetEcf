@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Overlay } from "../../assets/style/overlay";
 import {
-  Overlay,
   LogContainer,
   ContentSignIn,
   ContentLogIn,
 } from "../../assets/style/logStyle";
+import postCreateAccount from "../../data/postCreateAccount";
 import postConnection from "../../data/postConnection";
+import ConnectedNav from "../naviguation/ConnectedNav";
 
 const Log = ({ displayPage, togglePage }) => {
   const [page, setPage] = useState(togglePage);
@@ -17,6 +19,10 @@ const Log = ({ displayPage, togglePage }) => {
   const [pwdConfirmation, setPwdConfirmation] = useState("");
   const [fromConfirmation, setFormConfirmation] = useState("");
 
+  const [loginEmail, setLoginEmail] = useState();
+  const [loginPassword, setLoginPassword] = useState();
+  const [loginConfirmation, setLoginConfirmation] = useState("");
+
   let signinData = {
     signinName,
     signinEmail,
@@ -25,7 +31,7 @@ const Log = ({ displayPage, togglePage }) => {
     signinAlergy,
   };
 
-  function submitSignIn(obj) {
+  function submitSignIn(obj, event) {
     let values = Object.values(obj);
     var nameRegex = new RegExp(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/);
     var emailRegex = new RegExp(
@@ -39,7 +45,7 @@ const Log = ({ displayPage, togglePage }) => {
         if (pwdConfirmation === null && values[2]) {
           if (guestsRegex.test(values[3]) && values[3]) {
             if (alergyRegex.test(values[4])) {
-              postConnection(
+              postCreateAccount(
                 values[0],
                 values[1],
                 values[2],
@@ -48,7 +54,12 @@ const Log = ({ displayPage, togglePage }) => {
               ).then((data) =>
                 Object.keys(data) == "error"
                   ? setFormConfirmation(Object.values(data))
-                  : displayPage(false)
+                  : (setFormConfirmation("Le compte a été créé !"),
+                    (event.target.style.pointerEvents = "none"),
+                    setTimeout(() => {
+                      displayPage(false);
+                      event.target.style.pointerEvents = "auto";
+                    }, 2000))
               );
             } else
               setFormConfirmation(
@@ -69,6 +80,21 @@ const Log = ({ displayPage, togglePage }) => {
       );
   }
 
+  function submitLogin(email, password, event) {
+    postConnection(email, password).then((data) =>
+      Object.keys(data) == "erreur"
+        ? setLoginConfirmation(Object.values(data))
+        : (setLoginConfirmation("Vous êtes connecté"),
+          window.localStorage.setItem("userLogin", JSON.stringify(data)),
+          (<ConnectedNav connected={true} />),
+          (window.location.href = "/"),
+          (event.target.style.pointerEvents = "none"),
+          setTimeout(() => {
+            event.target.style.pointerEvents = "auto";
+            displayPage(false);
+          }, 2000))
+    );
+  }
   return (
     <Overlay onClick={() => displayPage(false)}>
       <LogContainer onClick={(e) => e.stopPropagation()}>
@@ -129,7 +155,7 @@ const Log = ({ displayPage, togglePage }) => {
               </div>
             </ContentSignIn>
             <div className="ctaLog">
-              <button onClick={() => submitSignIn(signinData)}>
+              <button onClick={(e) => submitSignIn(signinData, e)}>
                 Créer un compte
               </button>
               <p
@@ -144,20 +170,34 @@ const Log = ({ displayPage, togglePage }) => {
         ) : page === "login" ? (
           <>
             <h1>Connectez-vous</h1>
+            {loginConfirmation ? <p>{loginConfirmation}</p> : null}
+
             <ContentLogIn>
               <input
                 type="text"
                 placeholder="adresse e-mail"
                 autoComplete="email"
+                onChange={(e) => {
+                  setLoginEmail(e.target.value);
+                }}
               />
               <input
-                type="text"
+                type="password"
                 placeholder="mot de passe"
                 autoComplete="current-password"
+                onChange={(e) => {
+                  setLoginPassword(e.target.value);
+                }}
               />
             </ContentLogIn>
             <div className="ctaLog">
-              <button>Connection</button>
+              <button
+                onClick={(e) => {
+                  submitLogin(loginEmail, loginPassword, e);
+                }}
+              >
+                Connection
+              </button>
               <p
                 onClick={() => {
                   setPage("signin");

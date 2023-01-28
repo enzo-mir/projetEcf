@@ -1,14 +1,5 @@
 import styled from "styled-components";
-const Overlay = styled.div`
-  position: fixed;
-  display: grid;
-  place-items: center;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--color-blackless);
-  z-index: 100;
-`;
+
 const LogContainer = styled.section`
   position: absolute;
   display: grid;
@@ -76,4 +67,4 @@ const ContentLogIn = styled.div`
   }
 `;
 
-export { Overlay, LogContainer, ContentSignIn, ContentLogIn };
+export {LogContainer, ContentSignIn, ContentLogIn };

@@ -33,6 +33,13 @@ export const Wrapper = styled.header`
     }
   }
 
+  & #profil {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    font-size: var(--font-size-bigger);
+  }
+
   & .profil {
     display: flex;
     justify-content: center;

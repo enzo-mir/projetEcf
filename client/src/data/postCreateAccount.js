@@ -1,5 +1,11 @@
-export default function postConnection(email, mdp) {
-  let postAccount = fetch("/auth", {
+export default async function postCreateAccount(
+  nom,
+  email,
+  mdp,
+  convives,
+  alergies
+) {
+  let postAccount = fetch("/connectReq", {
     method: "POST",
     crossDomain: true,
     headers: {
@@ -8,8 +14,11 @@ export default function postConnection(email, mdp) {
       "Access-Control-Allow-Origin": "*",
     },
     body: JSON.stringify({
+      nom: nom,
       email: email,
       mdp: mdp,
+      convives: convives,
+      alergies: alergies,
     }),
   });
   let postRes = postAccount

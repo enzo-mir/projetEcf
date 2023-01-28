@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <Navigation />
+      <Navigation connected={false} />
     </>
   );
 }

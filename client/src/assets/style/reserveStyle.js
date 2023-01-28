@@ -3,16 +3,6 @@ import downArrowCalendar from "../images/down-arrow.ico";
 import calendar from "../images/calendar.png";
 import guests from "../images/guests.png";
 
-const Overlay = styled.div`
-  position: fixed;
-  display: grid;
-  place-items: center;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--color-blackless);
-  z-index: 100;
-`;
 const ReservationContainer = styled.section`
   position: absolute;
   display: grid;
@@ -144,4 +134,4 @@ const HoursList = styled.ul`
   }
 `;
 
-export { Overlay, OptionsReserv, ReservationContainer, HoursList };
+export {OptionsReserv, ReservationContainer, HoursList };
