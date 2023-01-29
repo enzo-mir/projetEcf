@@ -144,6 +144,7 @@ const Log = ({ displayPage, togglePage }) => {
                 <input
                   type="number"
                   min="1"
+                  max="9"
                   placeholder="convives par défaut (1-9)"
                   onChange={(e) => setSigninGuests(e.target.value)}
                 />
