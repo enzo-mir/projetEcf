@@ -7,7 +7,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PrivateRoute from "./PrivateRoute";
 import Connect from "../../data/Connect";
-import UndifinedRoute from "../Und";
+import UndifinedRoute from "../UndifinedPage";
 
 const Navigation = ({ connected, admin }) => {
   const [isConnected, setIsConnected] = useState(connected);
