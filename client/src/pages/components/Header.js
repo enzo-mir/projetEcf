@@ -6,11 +6,11 @@ import { Wrapper } from "../../assets/style/headerStyle";
 import { userData } from "../../data/Connect";
 import ProfilComponent from "./ProfilComponent";
 
-const Header = ({ isConnected }) => {
+const Header = ({ isConnected, display }) => {
   const [logPage, setLogPage] = useState(false);
   const [profilPage, setProfilPage] = useState(false);
   const [togglePage, setTogglePage] = useState("");
-  return (
+  return display ? (
     <>
       {logPage ? (
         <Log displayPage={setLogPage} togglePage={togglePage} />
@@ -63,7 +63,7 @@ const Header = ({ isConnected }) => {
         </div>
       </Wrapper>
     </>
-  );
+  ) : null;
 };
 
 export default Header;

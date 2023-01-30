@@ -13,6 +13,10 @@ import {
 const Home = () => {
   const [res, setRes] = useState(false);
 
+  // eslint-disable-next-line no-unused-expressions
+  if (window.localStorage.getItem("adminLogin"))
+    window.localStorage.clear("adminLogin");
+
   useEffect(() => {
     document.querySelectorAll(".btnReserve").forEach((resBtn) => {
       resBtn.addEventListener("click", () => {

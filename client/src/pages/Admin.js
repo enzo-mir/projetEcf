@@ -1,18 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
+import styled from "styled-components";
 
-function Admin() {
-  const [query, setQuery] = useState(null);
-  let q = query == null ? {} : query;
-  // eslint-disable-next-line no-unused-expressions, no-self-compare
-  query !== null ? console.log(Object.values(q)) : null;
+const Admin = () => {
   return (
-    <>
-      <div>
-        <h1>Admin</h1>
-        <button onClick={() => setQuery()}>ok</button>
-      </div>
-    </>
+    <Wrapper>
+      <ImgWrapper>
+        <h1>Galerie d'images</h1>
+      </ImgWrapper>
+      <HoursContainer>
+        <h1>Heures d'ouvertures</h1>
+      </HoursContainer>
+      <CarteContainer>
+        <h1>Carte du restaurant</h1>
+      </CarteContainer>
+    </Wrapper>
   );
-}
+};
 
+const HoursContainer = styled.article``;
+const ImgWrapper = styled.article``;
+const CarteContainer = styled.article``;
+
+const Wrapper = styled.main`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-block: 150px;
+`;
 export default Admin;

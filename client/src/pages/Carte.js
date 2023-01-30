@@ -18,6 +18,9 @@ export default function Carte() {
   const [menu, setMenu] = useState();
   const [res, setRes] = useState(false);
 
+  if (window.localStorage.getItem("adminLogin"))
+    window.localStorage.clear("adminLogin");
+
   useEffect(() => {
     document.querySelectorAll(".btnReserve").forEach((resBtn) => {
       resBtn.addEventListener("click", () => {

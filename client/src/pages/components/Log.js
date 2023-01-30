@@ -7,7 +7,7 @@ import {
 } from "../../assets/style/logStyle";
 import postCreateAccount from "../../data/postCreateAccount";
 import postConnection from "../../data/postConnection";
-import ConnectedNav from "../naviguation/ConnectedNav";
+import Navigation from "../naviguation/Navigation";
 
 const Log = ({ displayPage, togglePage }) => {
   const [page, setPage] = useState(togglePage);
@@ -84,15 +84,21 @@ const Log = ({ displayPage, togglePage }) => {
     postConnection(email, password).then((data) =>
       Object.keys(data) == "erreur"
         ? setLoginConfirmation(Object.values(data))
-        : (setLoginConfirmation("Vous êtes connecté"),
+        : Object.keys(data) != "admin"
+        ? (setLoginConfirmation("Vous êtes connecté"),
+          window.localStorage.getItem("adminLogin")
+            ? window.localStorage.clear("adminLogin")
+            : null,
           window.localStorage.setItem("userLogin", JSON.stringify(data)),
-          (<ConnectedNav connected={true} />),
           (window.location.href = "/"),
           (event.target.style.pointerEvents = "none"),
           setTimeout(() => {
             event.target.style.pointerEvents = "auto";
             displayPage(false);
           }, 2000))
+        : (window.localStorage.setItem("adminLogin", JSON.stringify(data)),
+          (window.location.href = "/admin"),
+          displayPage(false))
     );
   }
   return (

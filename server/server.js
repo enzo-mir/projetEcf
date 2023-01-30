@@ -145,7 +145,7 @@ app.get("/api", (req, res) => {
   /* ADMIN ACCESS  */
 
   connectionNew.query(
-    "INSERT IGNORE INTO `connexion` (`id`, `userName`, `email`, `password`, `convive`, `alergie`) VALUES (1,'admin','','admin',0,'')",
+    "INSERT IGNORE INTO `connexion` (`id`, `userName`, `email`, `password`, `convive`, `alergie`) VALUES (1,'','admin@admin.com','admin',0,'')",
     (error, result) => {
       error ? console.log(error) : null;
     }
@@ -206,14 +206,49 @@ app.post("/auth", (req, res) => {
     password: "",
     database: "ecfprojet",
   });
-
   connectionNew.query(
     `SELECT * FROM connexion WHERE email = "${req.body.email}" AND password = "${req.body.mdp}"`,
     (error, success) => {
       if (success.length < 1) {
         res.send({ erreur: "adresse e-mail ou mot de passe incorrect" });
       } else {
-        res.send(success).status(200);
+        if (
+          success[0].email == "admin@admin.com" &&
+          success[0].password == "admin"
+        ) {
+          res.send({ admin: "accés au contenus admin" }).status(200);
+        } else {
+          res.send(success).status(200);
+        }
+      }
+    }
+  );
+});
+
+app.post("/updateProfil", (req, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+
+  connectionNew.query(
+    `UPDATE connexion SET userName="${req.body.nom}",email="${req.body.email}",convive=${req.body.convives},alergie="${req.body.alergies}" WHERE email="${req.body.oldEmail}" AND password="${req.body.mdp}"`,
+    (error, success) => {
+      if (success) {
+        connectionNew.query(
+          `SELECT * from connexion WHERE email = "${req.body.email}" AND password="${req.body.mdp}"`,
+          (err, valid) => {
+            if (valid.length < 1) {
+              res.send({
+                erreur: "Un problème est survenus lors de l'édition du profil",
+              });
+            } else {
+              res.send(valid).status(200);
+            }
+          }
+        );
       }
     }
   );

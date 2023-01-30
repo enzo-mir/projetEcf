@@ -21,23 +21,25 @@ const CarteContainer = styled.main`
     display: grid;
     place-items: center;
     width: max-content;
+    color: transparent;
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke-color: rgb(0, 0, 0);
 
     ::after,
     ::before {
       content: "";
       position: absolute;
-      width: clamp(10px, 1.5vw, 15px);
-      height: clamp(10px, 1.5vw, 15px);
-      background-color: black;
-      border-radius: 50%;
+      width: clamp(10px, 60%, 60%);
+      height: 4px;
+      background: transparent;
+      border: 1px solid black;
+      border-radius: 10px;
     }
     ::after {
-      right: 0;
-      transform: translateX(200%);
+      top: -25%;
     }
     ::before {
-      left: 0;
-      transform: translateX(-200%);
+      bottom: -25%;
     }
   }
 

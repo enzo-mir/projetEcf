@@ -102,10 +102,11 @@ const SectionPlats = styled.section`
     grid-area: 1 / 2 / 2 / 3;
     width: 70%;
     text-align: center;
-    font-size: var(--font-size-bigger);
+    font-size: var(--font-size-reg);
     background-color: var(--primary-color);
     padding: 1em;
     border-radius: 10px;
+    line-height: 150%;
   }
   & button {
     grid-area: 2 / 2 / 3 / 3;
