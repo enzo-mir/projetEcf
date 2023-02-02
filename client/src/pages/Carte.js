@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { carteQuery } from "../data/fetchCarteData";
 import Reserv from "./components/Reserv";
 import {
@@ -12,7 +12,7 @@ import {
 
 export default function Carte() {
   const [carteFetched, setCarteFetched] = useState();
-  const [entree, setEntree] = useState([]);
+  const [entree, setEntree] = useState();
   const [plat, setPlat] = useState();
   const [dessert, setDessert] = useState();
   const [menu, setMenu] = useState();
