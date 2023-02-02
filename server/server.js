@@ -253,7 +253,27 @@ app.post("/updateProfil", (req, res) => {
     }
   );
 });
+app.post("/adminHours", (req, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
 
+  let obj = req.body.data;
+  obj.forEach(element => {
+    element.time == "lunch" ? (connectionNew.query(`UPDATE heures SET lunch = "${element.target}" WHERE day = "${element.day}"`, (err, result) => {
+      if (err) console.log(err);
+      if (result) console.log(result);
+    })) : (
+      (connectionNew.query(`UPDATE heures SET dinner = "${element.target}" WHERE day = "${element.day}"`, (err, result) => {
+        if (err) console.log(err);
+        if (result) console.log(result);
+      })
+      ))
+  })
+})
 app.get("/carteapi", (req, res) => {
   let connectionNew = mysql.createConnection({
     host: "localhost",
