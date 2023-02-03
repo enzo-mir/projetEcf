@@ -4,6 +4,8 @@ import { query } from "../data/fetchAllData";
 import editBtn from "../assets/images/edit_btn.png";
 import adminHoursPost from "../data/adminHoursPost";
 import { carteQuery } from "../data/fetchCarteData";
+import { Overlay } from "../assets/style/overlay";
+import postUpdateCarte from "../data/postUpdateCarte";
 
 const Admin = () => {
   const [fet, setFet] = useState([]);
@@ -13,6 +15,11 @@ const Admin = () => {
   const [dessert, setDessert] = useState();
   const [menu, setMenu] = useState();
   const [hoursEdit, setHoursEdit] = useState(false);
+  const [displayEditCarte, setDisplayEditCarte] = useState(false);
+  const [titleCarteEdition, setTitleCarteEdition] = useState("");
+  const [descCarteEdition, setDescCarteEdition] = useState("");
+  const [priceCarteEdition, setPriceCarteEdition] = useState("");
+  const [errorEditingCarte, setErrorEditingCarte] = useState(false);
 
   useEffect(() => {
     query().then((data) => setFet(data.heures));
@@ -24,6 +31,77 @@ const Admin = () => {
       setMenu(data.menu);
     });
   }, []);
+
+  const EditingCarteComponents = () => {
+    function HandlerError({ error }) {
+      return <p>{error}</p>;
+    }
+    return (
+      <Overlay onClick={() => setDisplayEditCarte(false)}>
+        <EditCarteContainer onClick={(e) => e.stopPropagation()}>
+          <div>
+            <h1>Édition de la carte</h1>
+            {errorEditingCarte && <HandlerError error={errorEditingCarte} />}
+          </div>
+          <div>
+            <p>titre : {titleCarteEdition}</p>
+            {descCarteEdition ? (
+              <>
+                <p>description : {descCarteEdition}</p>
+                <p>prix : {priceCarteEdition}</p>
+              </>
+            ) : (
+              <p>formule : {priceCarteEdition}</p>
+            )}
+          </div>
+          <div>
+            <input type="text" />
+            {descCarteEdition ? (
+              <>
+                <input type="text" />
+                <input type="number" min="0" />
+              </>
+            ) : (
+              <input type="text" />
+            )}
+          </div>
+          <button
+            onClick={(e) => {
+              e.target.parentNode
+                .querySelectorAll("input")
+                .forEach((inputs) => {
+                  inputs.value === ""
+                    ? setErrorEditingCarte("erreur : champs non-remplis")
+                    : setErrorEditingCarte(false);
+                });
+
+              if (!errorEditingCarte) {
+                descCarteEdition
+                  ? postUpdateCarte(
+                      titleCarteEdition,
+                      descCarteEdition,
+                      e.target.parentNode.children[2].firstChild.value,
+                      e.target.parentNode.children[2].children[1].value,
+                      e.target.parentNode.children[2].children[2].value,
+                      null
+                    )
+                  : postUpdateCarte(
+                      titleCarteEdition,
+                      descCarteEdition,
+                      e.target.parentNode.children[2].firstChild.value,
+                      null,
+                      null,
+                      e.target.parentNode.children[2].children[1].value
+                    );
+              }
+            }}
+          >
+            Fin de l'édition
+          </button>
+        </EditCarteContainer>
+      </Overlay>
+    );
+  };
 
   function editingHours(event, text, day, time) {
     let element = document.createElement("input");
@@ -43,6 +121,17 @@ const Admin = () => {
     adminHoursPost(data);
     window.location.reload();
   }
+
+  function editableCarte(event) {
+    let title = event.target.parentNode.firstChild.textContent;
+    let desc = event.target.parentNode.children[1].textContent;
+    let price = event.target.parentNode.children[2].textContent;
+    setTitleCarteEdition(title);
+    setDescCarteEdition(desc);
+    setPriceCarteEdition(price);
+    setDisplayEditCarte(true);
+  }
+
   return (
     <Wrapper>
       <ImgWrapper>
@@ -118,6 +207,7 @@ const Admin = () => {
         ) : null}
       </HoursContainer>
       <CarteContainer>
+        {displayEditCarte && <EditingCarteComponents />}
         <h1>Carte du restaurant</h1>
         <h2>Entrées</h2>
         <div className="content">
@@ -131,6 +221,9 @@ const Admin = () => {
                       <h3>{food.nom}</h3>
                       <p>{food.description}</p>
                       <p>{food.prix}€</p>
+                      <button onClick={(e) => editableCarte(e)}>
+                        <img src={editBtn} alt="edit btn" />
+                      </button>
                     </div>
                   ) : null;
                 })}
@@ -143,6 +236,9 @@ const Admin = () => {
                       <h3>{food.nom}</h3>
                       <p>{food.description}</p>
                       <p>{food.prix}€</p>
+                      <button onClick={(e) => editableCarte(e)}>
+                        <img src={editBtn} alt="edit btn" />
+                      </button>
                     </div>
                   ) : null;
                 })}
@@ -162,6 +258,9 @@ const Admin = () => {
                       <h3>{food.nom}</h3>
                       <p>{food.description}</p>
                       <p>{food.prix}€</p>
+                      <button onClick={(e) => editableCarte(e)}>
+                        <img src={editBtn} alt="edit btn" />
+                      </button>
                     </div>
                   ) : null;
                 })}
@@ -174,6 +273,9 @@ const Admin = () => {
                       <h3>{food.nom}</h3>
                       <p>{food.description}</p>
                       <p>{food.prix}€</p>
+                      <button onClick={(e) => editableCarte(e)}>
+                        <img src={editBtn} alt="edit btn" />
+                      </button>
                     </div>
                   ) : null;
                 })}
@@ -187,37 +289,73 @@ const Admin = () => {
             <div>
               {dessert.map((food, id) => {
                 return (
-                  <div key={id}>
+                  <div key={id} className="dessert">
                     <h3>{food.nom}</h3>
                     <p>{food.description}</p>
                     <p>{food.prix}€</p>
+                    <button onClick={(e) => editableCarte(e)}>
+                      <img src={editBtn} alt="edit btn" />
+                    </button>
                   </div>
                 );
               })}
             </div>
           ) : null}
         </div>
-        <h2>Menus</h2>
-        <div className="content">
-          {menu ? (
-            <div>
-              {menu.map((food, id) => {
-                return (
-                  <div key={id}>
-                    <h3>{food.nom}</h3>
-                    <p>{food.description}</p>
-                    <p>{food.formule}€</p>
-                  </div>
-                );
-              })}
+        {menu ? (
+          <>
+            <h2>Menus</h2>
+            <div className="content">
+              <div>
+                {menu.map((food, id) => {
+                  return (
+                    <div key={id} className="menu">
+                      <h3>{food.nom}</h3>
+                      <p>{food.description}</p>
+                      <p>{food.formule}</p>
+                      <button onClick={(e) => editableCarte(e)}>
+                        <img src={editBtn} alt="edit btn" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          ) : null}
-        </div>
+          </>
+        ) : null}
       </CarteContainer>
     </Wrapper>
   );
 };
-
+const EditCarteContainer = styled.div`
+  position: absolute;
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  padding-block: 50px;
+  width: 1000px;
+  min-height: 60vh;
+  max-width: 100%;
+  z-index: 150;
+  background-color: #fff;
+  font-size: var(--font-size);
+  & > div:first-child {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+  & div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    padding-inline: 1em;
+    height: 100%;
+  }
+  & button {
+    grid-area: 3 / 1 / 4 / 3;
+    width: fit-content;
+  }
+`;
 const HoursContainer = styled.article`
   display: flex;
   justify-content: center;

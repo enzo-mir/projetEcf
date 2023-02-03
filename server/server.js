@@ -262,18 +262,75 @@ app.post("/adminHours", (req, res) => {
   });
 
   let obj = req.body.data;
-  obj.forEach(element => {
-    element.time == "lunch" ? (connectionNew.query(`UPDATE heures SET lunch = "${element.target}" WHERE day = "${element.day}"`, (err, result) => {
-      if (err) console.log(err);
-      if (result) console.log(result);
-    })) : (
-      (connectionNew.query(`UPDATE heures SET dinner = "${element.target}" WHERE day = "${element.day}"`, (err, result) => {
-        if (err) console.log(err);
-        if (result) console.log(result);
-      })
-      ))
-  })
-})
+  obj.forEach((element) => {
+    element.time == "lunch"
+      ? connectionNew.query(
+          `UPDATE heures SET lunch = "${element.target}" WHERE day = "${element.day}"`,
+          (err, result) => {
+            if (err) console.log(err);
+            if (result) console.log(result);
+          }
+        )
+      : connectionNew.query(
+          `UPDATE heures SET dinner = "${element.target}" WHERE day = "${element.day}"`,
+          (err, result) => {
+            if (err) console.log(err);
+          }
+        );
+  });
+});
+app.post("/updateCarte", (req, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+
+  req.body.formule === null
+    ? connectionNew.query(
+        `SELECT * from entree WHERE nom = "${req.body.oldTitle}" AND description = "${req.body.desc}"`,
+        (err, succ) => {
+          if (succ) {
+            connectionNew.query(
+              `UPDATE entree SET nom = "${req.body.title}", description = "${req.body.desc}", prix = ${req.body.price} WHERE  nom = "${req.body.oldTitle}" AND description = "${req.body.desc}"`
+            );
+          }
+          if (succ.length < 1) {
+            connectionNew.query(
+              `SELECT * from plat WHERE nom = "${req.body.oldTitle}" AND description = "${req.body.desc}"`,
+              (err, succ) => {
+                if (succ) {
+                  connectionNew.query(
+                    `UPDATE plat SET nom = "${req.body.title}", description = "${req.body.desc}", prix = ${req.body.price} WHERE  nom = "${req.body.oldTitle}" AND description = "${req.body.desc}"`
+                  );
+                }
+                if (succ.length < 1) {
+                  connectionNew.query(
+                    `SELECT * from dessert WHERE nom = "${req.body.oldTitle}" AND description = "${req.body.desc}"`,
+                    (err, succ) => {
+                      if (succ) {
+                        connectionNew.query(
+                          `UPDATE dessert SET nom = "${req.body.title}", description = "${req.body.desc}", prix = ${req.body.price} WHERE  nom = "${req.body.oldTitle}" AND description = "${req.body.desc}"`
+                        );
+                      }
+
+                      if (succ.length < 1) {
+                        //send error
+                      }
+                    }
+                  );
+                }
+              }
+            );
+          }
+        }
+      )
+    : connectionNew.query(
+        `UPDATE menu SET nom = "${req.body.title}", formule = "${req.body.formule}" WHERE  nom = "${req.body.oldTitle}"`
+      );
+});
+
 app.get("/carteapi", (req, res) => {
   let connectionNew = mysql.createConnection({
     host: "localhost",
