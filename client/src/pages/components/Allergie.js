@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-const Allergie = ({ onchange }) => {
+const Allergie = ({ onchange,value }) => {
   return (
     <Wrapper>
       <input
         type="texte"
         placeholder="Entrez vos allergies"
+        value={value}
         onChange={onchange}
       />
     </Wrapper>

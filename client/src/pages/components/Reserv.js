@@ -8,6 +8,7 @@ import {
   ReservationContainer,
   HoursList,
 } from "../../assets/style/reserveStyle";
+import { userData } from "../../data/Connect";
 
 export default function Reserv({ res }) {
   const [fet, setFet] = useState([]);
@@ -18,10 +19,11 @@ export default function Reserv({ res }) {
   const [name, setName] = useState();
   const [resError, setResError] = useState("");
   const [showAllergy, setShowAllergy] = useState(false);
-  const [allergy, setAlergy] = useState();
+  const [alergy, setAlergy] = useState();
 
   useEffect(() => {
     query().then((data) => setFet(data.heures));
+    isConnected();
   }, []);
 
   function handleChangeDate(e) {
@@ -104,7 +106,7 @@ export default function Reserv({ res }) {
         if (email !== undefined) {
           if (name !== undefined) {
             if (hourTargeted !== null) {
-              if (allergy) {
+              if (alergy) {
                 setResError("Votre réservation à bien été pris en compte");
                 postReservation(
                   guests,
@@ -112,7 +114,7 @@ export default function Reserv({ res }) {
                   email,
                   name,
                   hourTargeted,
-                  allergy
+                  alergy
                 );
                 e.target.style.pointerEvents = "none";
 
@@ -137,6 +139,16 @@ export default function Reserv({ res }) {
     } else setResError("Le nombre de convives doit être compris entre 1 et 9");
   }
 
+  function isConnected() {
+    if (userData !== null) {
+      setGuests(userData.convive);
+      setName(userData.userName);
+      setEmail(userData.email);
+      setShowAllergy(true);
+      setAlergy(userData.alergie);
+    }
+  }
+
   return (
     <Overlay onClick={() => res(false)}>
       <ReservationContainer onClick={(e) => e.stopPropagation()}>
@@ -150,7 +162,9 @@ export default function Reserv({ res }) {
             max="9"
             min="1"
             value={guests}
-            onChange={(e) => setGuests(e.target.value)}
+            onChange={(e) =>
+              userData !== null ? null : setGuests(e.target.value)
+            }
             maxLength="2"
             required
           />
@@ -166,18 +180,20 @@ export default function Reserv({ res }) {
             id="email"
             required
             placeholder="Entrez votre e-mail"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            value={email}
+            onChange={(e) =>
+              userData !== null ? null : setEmail(e.target.value)
+            }
           />
           <input
             type="text"
             id="name"
             required
             placeholder="Entrez votre nom"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            value={name}
+            onChange={(e) =>
+              userData !== null ? null : setName(e.target.value)
+            }
           />
         </OptionsReserv>
         <div id="lunchHours">
@@ -225,14 +241,18 @@ export default function Reserv({ res }) {
           <p
             onClick={(e) => {
               setShowAllergy(!showAllergy);
-              setAlergy("");
+              setAlergy(alergy);
             }}
           >
             Allergie(s) ?
           </p>
-          {showAllergy ? (
-            <Allergie onchange={(e) => setAlergy(e.target.value)} />
-          ) : null}
+          {showAllergy && (
+            <Allergie
+              value={alergy}
+              onchange={(e) => setAlergy(e.target.value)}
+            />
+          )}
+
           <button type="submit" onClick={submitReservation}>
             Réservez la table
           </button>
