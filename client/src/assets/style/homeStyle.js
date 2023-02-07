@@ -74,35 +74,59 @@ const ContextText = styled.div`
 const SectionPlats = styled.section`
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1fr 0.75fr;
   grid-template-rows: repeat(2, 1fr);
-  place-items: center left;
-  gap: 10vh 5vw;
-  width: 60%;
-  min-width: 850px;
+  place-items: center;
+  row-gap: 10vh;
+  width: clamp(500px, 60%, 1400px);
 
-  & > img {
-    grid-area: 1 / 1 / 2 / 2;
-  }
-  & img:nth-child(2) {
-    grid-area: 2 / 1 / 3 / 2;
-  }
-  & img {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: 0.15s ease-out;
-
-    &:hover {
-      filter: brightness(50%);
+  & .imagesGalery {
+    display: grid;
+    width: 100%;
+    grid-area: 1 / 1 / 3 / 2;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 250px));
+    place-items: center;
+    margin-bottom: auto;
+    gap: 25px;
+    & div {
+      position: relative;
+      text-align: center;
+      &:hover {
+        & span {
+          color: #fff;
+        }
+        & img {
+          filter: brightness(50%);
+        }
+      }
+      span {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(5px, 1vw, 20px);
+        color: transparent;
+        transition: 0.15s ease-out;
+        width: 100%;
+      }
+    }
+    & img {
+      width: 100%;
+      width: clamp(150px, 13vw, 250px);
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 10px;
+      transition: 0.15s ease-out;
     }
   }
-  & p {
+
+  & > p {
     grid-area: 1 / 2 / 2 / 3;
-    width: 70%;
     text-align: center;
-    font-size: var(--font-size-reg);
+    font-size: var(--font-size);
     background-color: var(--primary-color);
     padding: 1em;
     border-radius: 10px;
@@ -111,8 +135,8 @@ const SectionPlats = styled.section`
   & button {
     grid-area: 2 / 2 / 3 / 3;
     margin-bottom: auto;
-    margin-right: auto;
     padding: 1em 0.5em;
+    font-size: var(--font-size);
   }
 `;
 

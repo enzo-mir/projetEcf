@@ -162,9 +162,7 @@ export default function Reserv({ res }) {
             max="9"
             min="1"
             value={guests}
-            onChange={(e) =>
-              userData !== null ? null : setGuests(e.target.value)
-            }
+            onChange={(e) => setGuests(e.target.value)}
             maxLength="2"
             required
           />
@@ -201,7 +199,6 @@ export default function Reserv({ res }) {
           <div className="hours">
             <HoursList>
               {fet.map((data) => {
-                // eslint-disable-next-line no-unused-expressions
                 return data.day === dayDate
                   ? dayDate === "lundi" ||
                     dayDate === "mardi" ||

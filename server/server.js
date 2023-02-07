@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql");
 var bodyParser = require("body-parser");
+let cloudinary = require("cloudinary").v2;
 var cors = require("cors");
 const PORT = process.env.PORT || 7000;
 
@@ -14,6 +15,14 @@ app.use(
   })
 );
 app.use(express.json());
+
+cloudinary.config({
+  cloud_name: "dbo6hyl8t",
+  api_key: "184175781875795",
+  api_secret: "VoLvBfRnm-GLW22INeb8eWFnN3g",
+  secure: true,
+});
+
 /* app.use(express.static(path.join(__dirname, "reactnode/build")));
  */
 /* app.get("/*", (req, res) => {
@@ -130,6 +139,41 @@ app.get("/api", (req, res) => {
         connectionNew.query(
           "INSERT IGNORE INTO `dessert` (`id`, `nom`, `description`, `prix`) VALUES (1,'mousse au chocolat','mousse au chocolat praliné des produits locaux', '6'),(2,'café gourmand','café accompagné de une boule de glace a la vanille', '8'),(3,'tarte tatin','tarte tatin aux pommes onctueuses', '7'),(4,'crème brûlée','crème brûlée caramélisée', '8')"
         );
+      }
+    }
+  );
+
+  connectionNew.query(
+    "CREATE TABLE IF NOT EXISTS `images` (`id` INT AUTO_INCREMENT primary key NOT NULL,`titre` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`lien` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+    (error, result) => {
+      error ? console.log(error) : null;
+      if (result) {
+        cloudinary.api.resources().then((data) => {
+          connectionNew.query(
+            "SELECT `id`, `titre`, `description`, `lien` FROM `images` WHERE 1",
+            (err, success) => {
+              if (success.length < 1) {
+                let images = data.resources;
+                connectionNew.query(
+                  `INSERT IGNORE INTO images (id, titre, description, lien) VALUES (1,"fondue savoyarde","cuve de fromage fondus à déguster entre amis",'${images[0].url}'),(2,"raclette party","fromage exceptionnel pour un moment familial",'${images[1].url}')`
+                );
+              } else if (err) {
+                console.log(err);
+              }
+            }
+          );
+
+          app.get("/images", (req, res) => {
+            connectionNew.query(
+              "SELECT `id`, `titre`, `description`, `lien` FROM `images` WHERE 1",
+              (err, results) => {
+                if (results) {
+                  res.send(results);
+                }
+              }
+            );
+          });
+        });
       }
     }
   );
