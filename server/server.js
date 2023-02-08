@@ -144,7 +144,7 @@ app.get("/api", (req, res) => {
   );
 
   connectionNew.query(
-    "CREATE TABLE IF NOT EXISTS `images` (`id` INT AUTO_INCREMENT primary key NOT NULL,`titre` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`lien` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+    "CREATE TABLE IF NOT EXISTS `images` (`id` INT AUTO_INCREMENT primary key NOT NULL,`titre` varchar(255) NOT NULL,`description` varchar(255) NOT NULL,`lien` varchar(255) NOT NULL,`publicId` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
     (error, result) => {
       error ? console.log(error) : null;
       if (result) {
@@ -155,7 +155,7 @@ app.get("/api", (req, res) => {
               if (success.length < 1) {
                 let images = data.resources;
                 connectionNew.query(
-                  `INSERT IGNORE INTO images (id, titre, description, lien) VALUES (1,"fondue savoyarde","cuve de fromage fondus à déguster entre amis",'${images[0].url}'),(2,"raclette party","fromage exceptionnel pour un moment familial",'${images[1].url}')`
+                  `INSERT IGNORE INTO images (id, titre, description, lien, publicId) VALUES (1,"fondue savoyarde","cuve de fromage fondus à déguster entre amis",'${images[0].url}','${images[0].public_id}'),(2,"raclette party","fromage exceptionnel pour un moment familial",'${images[1].url}','${images[1].public_id}')`
                 );
               } else if (err) {
                 console.log(err);
@@ -297,6 +297,7 @@ app.post("/updateProfil", (req, res) => {
     }
   );
 });
+
 app.post("/adminHours", (req, res) => {
   let connectionNew = mysql.createConnection({
     host: "localhost",
@@ -323,6 +324,7 @@ app.post("/adminHours", (req, res) => {
         );
   });
 });
+
 app.post("/updateCarte", (req, res) => {
   let connectionNew = mysql.createConnection({
     host: "localhost",
@@ -373,6 +375,38 @@ app.post("/updateCarte", (req, res) => {
     : connectionNew.query(
         `UPDATE menu SET nom = "${req.body.title}", formule = "${req.body.formule}" WHERE  nom = "${req.body.oldTitle}"`
       );
+});
+
+app.post("/adminImageEdited", (req, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+  let response = req.body;
+
+  if (response.oldUrl === response.newUrl) {
+    connectionNew.query(
+      `UPDATE images SET titre='${response.titre}',description='${response.desc}',lien='${response.oldUrl}' WHERE lien ='${response.oldUrl}'`,
+      (err, success) => {}
+    );
+  } else {
+    connectionNew.query(
+      `SELECT * from images WHERE lien ='${response.oldUrl}'`,
+      (error, success) => {
+        if (success) {
+           cloudinary.api.delete_resources(`${success[0].publicId}`, {
+            resource_type: "image",
+          }); 
+        }
+      }
+    );
+    connectionNew.query(
+      `UPDATE images SET titre='${response.titre}',description='${response.desc}',lien='${response.newUrl}' WHERE lien ='${response.oldUrl}'`,
+      (err, success) => {}
+    );
+  }
 });
 
 app.get("/carteapi", (req, res) => {

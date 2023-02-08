@@ -6,6 +6,8 @@ import adminHoursPost from "../data/adminHoursPost";
 import { carteQuery } from "../data/fetchCarteData";
 import { Overlay } from "../assets/style/overlay";
 import postUpdateCarte from "../data/postUpdateCarte";
+import { imagesFetched } from "../data/fetchImage";
+import AdminEditImages from "./components/AdminEditImages";
 
 const Admin = () => {
   const [fet, setFet] = useState([]);
@@ -20,6 +22,11 @@ const Admin = () => {
   const [descCarteEdition, setDescCarteEdition] = useState("");
   const [priceCarteEdition, setPriceCarteEdition] = useState("");
   const [errorEditingCarte, setErrorEditingCarte] = useState(false);
+  const [imagesApi, setImagesApi] = useState([]);
+  const [displayEditImage, setDisplayEditImage] = useState(false);
+  const [imagesEditTitle, setImageEditTitle] = useState();
+  const [imagesEditDesc, setImageEditDesc] = useState();
+  const [imagesEditUrl, setImageEditUrl] = useState();
 
   useEffect(() => {
     query().then((data) => setFet(data.heures));
@@ -29,6 +36,22 @@ const Admin = () => {
       setPlat(data.plat);
       setDessert(data.dessert);
       setMenu(data.menu);
+    });
+    setImagesApi([]);
+    imagesFetched().then((image) => {
+      image.map((img) => {
+        setImagesApi((prevImage) => {
+          return [
+            ...prevImage,
+            {
+              id: img.id,
+              title: img.titre,
+              desc: img.description,
+              url: img.lien,
+            },
+          ];
+        });
+      });
     });
   }, []);
 
@@ -132,10 +155,52 @@ const Admin = () => {
     setDisplayEditCarte(true);
   }
 
+  function imageEdit(event) {
+    let parentElement = event.target.parentNode.parentNode;
+    let imagesComponents = parentElement.querySelector("p");
+    let image = parentElement.querySelector("img");
+    let contentTarget = imagesComponents.textContent;
+
+    setImageEditUrl(image.getAttribute("src"));
+    setImageEditTitle(
+      contentTarget.slice(
+        contentTarget.indexOf(":") + 2,
+        contentTarget.indexOf("Description :")
+      )
+    );
+    setImageEditDesc(
+      contentTarget.slice(
+        contentTarget.indexOf(":", contentTarget.indexOf(":") + 1) + 2
+      )
+    );
+
+    setDisplayEditImage(true);
+  }
+
   return (
     <Wrapper>
+      {displayEditImage && <AdminEditImages title={imagesEditTitle} description={imagesEditDesc} url={imagesEditUrl} displaying={setDisplayEditImage}/>}
       <ImgWrapper>
         <h1>Galerie d'images</h1>
+        <div className="imgGalery">
+          {imagesApi.map((images, id) => {
+            return (
+              <div key={id}>
+                <img src={images.url} alt="plats du chef" />
+                <p>
+                  Titre : {images.title}
+                  <br />
+                  <br />
+                  Description : {images.desc}
+                </p>
+                <aside>
+                  <button onClick={(e) => imageEdit(e)}>Éditer</button>
+                  <button>Supprimer</button>
+                </aside>
+              </div>
+            );
+          })}
+        </div>
       </ImgWrapper>
       <HoursContainer>
         <h1>Horaires d'ouvertures</h1>
@@ -410,7 +475,44 @@ const HoursContainer = styled.article`
     }
   }
 `;
-const ImgWrapper = styled.article``;
+const ImgWrapper = styled.article`
+  .imgGalery {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+    text-align: center;
+
+    & div {
+      font-size: var(--font-size-reg);
+      display: flex;
+      width: 100%;
+      border-radius: 10px;
+
+      & p {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 2em;
+      }
+      & img {
+        width: clamp(150px, 13vw, 200px);
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      & aside {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: column;
+      }
+    }
+  }
+`;
 const CarteContainer = styled.article`
   display: flex;
   flex-direction: column;
