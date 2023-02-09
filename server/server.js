@@ -384,29 +384,58 @@ app.post("/adminImageEdited", (req, res) => {
     password: "",
     database: "ecfprojet",
   });
-  let response = req.body;
 
-  if (response.oldUrl === response.newUrl) {
+  let response = req.body;
+  if (response.add == true) {
     connectionNew.query(
-      `UPDATE images SET titre='${response.titre}',description='${response.desc}',lien='${response.oldUrl}' WHERE lien ='${response.oldUrl}'`,
-      (err, success) => {}
+      `INSERT INTO images(id, titre, description, lien, publicId) VALUES (NULL,"${response.titre}","${response.desc}","${response.newUrl}","${response.pubId}")`
     );
   } else {
-    connectionNew.query(
-      `SELECT * from images WHERE lien ='${response.oldUrl}'`,
-      (error, success) => {
-        if (success) {
-           cloudinary.api.delete_resources(`${success[0].publicId}`, {
-            resource_type: "image",
-          }); 
+    if ((response.oldUrl === response.newUrl) != null) {
+      connectionNew.query(
+        `UPDATE images SET titre='${response.titre}',description='${response.desc}',lien='${response.newUrl}' WHERE lien ='${response.oldUrl}'`
+      );
+    } else if (response.oldUrl != response.newUrl) {
+      connectionNew.query(
+        `SELECT * from images WHERE lien ='${response.oldUrl}'`,
+        (error, success) => {
+          if (success) {
+            cloudinary.api.delete_resources(`${success[0].publicId}`, {
+              resource_type: "image",
+            });
+          }
         }
-      }
-    );
-    connectionNew.query(
-      `UPDATE images SET titre='${response.titre}',description='${response.desc}',lien='${response.newUrl}' WHERE lien ='${response.oldUrl}'`,
-      (err, success) => {}
-    );
+      );
+      connectionNew.query(
+        `UPDATE images SET titre='${response.titre}',description='${response.desc}',lien='${response.newUrl}',publicId='${response.pubId}' WHERE lien ='${response.oldUrl}'`,
+        (err, success) => {}
+      );
+    }
   }
+});
+
+app.post("/adminImageDeleted", (req, res) => {
+  let connectionNew = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ecfprojet",
+  });
+  let response = req.body;
+  /* SUPRESSION IMAGE */
+  connectionNew.query(
+    `SELECT * from images WHERE lien ='${response.oldUrl}'`,
+    (error, success) => {
+      if (success) {
+        cloudinary.api.delete_resources(`${success[0].publicId}`, {
+          resource_type: "image",
+        });
+        connectionNew.query(
+          `DELETE FROM images WHERE lien ='${response.oldUrl}'`
+        );
+      }
+    }
+  );
 });
 
 app.get("/carteapi", (req, res) => {

@@ -27,6 +27,7 @@ const Admin = () => {
   const [imagesEditTitle, setImageEditTitle] = useState();
   const [imagesEditDesc, setImageEditDesc] = useState();
   const [imagesEditUrl, setImageEditUrl] = useState();
+  const [addImage, setAddImage] = useState();
 
   useEffect(() => {
     query().then((data) => setFet(data.heures));
@@ -173,13 +174,51 @@ const Admin = () => {
         contentTarget.indexOf(":", contentTarget.indexOf(":") + 1) + 2
       )
     );
+    setAddImage(false);
+    setDisplayEditImage(true);
+  }
 
+  async function handleDelet(e) {
+    let parentElement = e.target.parentNode.parentNode;
+    let url = parentElement.querySelector("img").getAttribute("src");
+
+    let postDataImage = fetch("/adminImageDeleted", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Connection: "keep-alive",
+        Accept: "*",
+      },
+      body: JSON.stringify({
+        titre: null,
+        desc: null,
+        oldUrl: url,
+        newUrl: null,
+        pubId: null,
+      }),
+    });
+    await postDataImage.then(window.location.reload());
+  }
+
+  function imageAdd(event) {
+    setImageEditUrl(null);
+    setImageEditTitle("");
+    setImageEditDesc("");
+    setAddImage(true);
     setDisplayEditImage(true);
   }
 
   return (
     <Wrapper>
-      {displayEditImage && <AdminEditImages title={imagesEditTitle} description={imagesEditDesc} url={imagesEditUrl} displaying={setDisplayEditImage}/>}
+      {displayEditImage && (
+        <AdminEditImages
+          title={imagesEditTitle}
+          description={imagesEditDesc}
+          url={imagesEditUrl}
+          displaying={setDisplayEditImage}
+          adding={addImage}
+        />
+      )}
       <ImgWrapper>
         <h1>Galerie d'images</h1>
         <div className="imgGalery">
@@ -195,11 +234,12 @@ const Admin = () => {
                 </p>
                 <aside>
                   <button onClick={(e) => imageEdit(e)}>Éditer</button>
-                  <button>Supprimer</button>
+                  <button onClick={(e) => handleDelet(e)}>Supprimer</button>
                 </aside>
               </div>
             );
           })}
+          <button onClick={(e) => imageAdd(e)}>Ajouter +</button>
         </div>
       </ImgWrapper>
       <HoursContainer>
@@ -495,6 +535,7 @@ const ImgWrapper = styled.article`
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 100%;
         padding-inline: 2em;
       }
       & img {
