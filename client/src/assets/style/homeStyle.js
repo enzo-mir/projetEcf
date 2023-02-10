@@ -110,6 +110,7 @@ const SectionPlats = styled.section`
         font-size: clamp(5px, 1vw, 20px);
         color: transparent;
         transition: 0.15s ease-out;
+        font-size: var(--font-size);
         width: 100%;
       }
     }

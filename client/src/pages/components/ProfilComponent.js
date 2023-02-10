@@ -52,6 +52,8 @@ const ProfilComponent = ({ displayProfil }) => {
         value={alergy}
         onChange={(e) => setAlergy(e.target.value)}
       />
+    ) : content === mdp ? (
+      <input type="text" value={mdp} onChange={(e) => setMdp(e.target.value)} />
     ) : null;
   }
 
@@ -61,6 +63,7 @@ const ProfilComponent = ({ displayProfil }) => {
     var emailRegex = new RegExp(
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
     );
+    var pwdRegex = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/);
     var alergyRegex = nameRegex;
     var guestsRegex = new RegExp(/^([1-9])$/);
 
@@ -68,28 +71,34 @@ const ProfilComponent = ({ displayProfil }) => {
       if (emailRegex.test(values[1]) && values[1]) {
         if (guestsRegex.test(values[3]) && values[3]) {
           if (alergyRegex.test(values[4])) {
-            updateProfil(
-              values[0],
-              values[1],
-              values[2],
-              values[3],
-              values[4],
-              values[5]
-            ).then((data) =>
-              Object.keys(data) == "erreur"
-                ? setValidationMessage(Object.values(data))
-                : (setValidationMessage("Profil mis a jour"),
-                  window.localStorage.setItem(
-                    "userLogin",
-                    JSON.stringify(data)
-                  ),
-                  (window.location.href = "/"),
-                  (event.target.style.pointerEvents = "none"),
-                  setTimeout(() => {
-                    event.target.style.pointerEvents = "auto";
-                    displayProfil(false);
-                  }, 2000))
-            );
+            if (pwdRegex.test(values[2] && values[2])) {
+              updateProfil(
+                values[0],
+                values[1],
+                values[2],
+                values[3],
+                values[4],
+                values[5]
+              ).then((data) =>
+                Object.keys(data) == "erreur"
+                  ? setValidationMessage(Object.values(data))
+                  : (setValidationMessage("Profil mis a jour"),
+                    window.localStorage.setItem(
+                      "userLogin",
+                      JSON.stringify(data)
+                    ),
+                    (window.location.href = "/"),
+                    (event.target.style.pointerEvents = "none"),
+                    setTimeout(() => {
+                      event.target.style.pointerEvents = "auto";
+                      displayProfil(false);
+                    }, 2000))
+              );
+            } else {
+              setValidationMessage(
+                "le mot de passe doit être composé d'une majuscule, minuscule, d'un chiffre et avoir une longueur de 8 charactères"
+              );
+            }
           } else
             setValidationMessage(
               "aucuns caractères spéciaux ni numériques dans les alèrgies"
@@ -103,6 +112,24 @@ const ProfilComponent = ({ displayProfil }) => {
       setValidationMessage(
         "le champs nom et vide ou comporte autre choses que des lettres"
       );
+  }
+
+  function deletAccount() {
+
+    fetch("/deletAccount", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Connection: "keep-alive",
+        Accept: "*",
+      },
+      body: JSON.stringify({
+        nom: name,
+        email: email,
+        convives: guests,
+        allergies: alergy,
+      }),
+    });
   }
 
   return (
@@ -119,9 +146,9 @@ const ProfilComponent = ({ displayProfil }) => {
           <p>convives (par défaut) : {edit(guests)}</p>
           <p>alergies : {edit(alergy)}</p>
         </div>
-        <p>
-          mot de passe :<strong> {userData.password}</strong>
-        </p>
+        <div className="passwordField">
+          <p>mot de passe : {edit(mdp)}</p>
+        </div>
         <div className="cta">
           {!editable ? (
             <button
@@ -144,11 +171,12 @@ const ProfilComponent = ({ displayProfil }) => {
           <button
             onClick={() => {
               window.localStorage.clear("userLogin");
-              window.location.href = "/";
+              window.location.reload();
             }}
           >
             Déconnection
           </button>
+          <button onClick={() => deletAccount()}>supprimer le compte</button>
         </div>
       </ContainerSettings>
     </Overlay>
@@ -157,9 +185,11 @@ const ProfilComponent = ({ displayProfil }) => {
 
 const ContainerSettings = styled.div`
   position: absolute;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
   gap: 5vh;
-  place-items: center;
   padding-block: 50px;
   width: 1000px;
   min-height: 60vh;
@@ -168,24 +198,31 @@ const ContainerSettings = styled.div`
   background-color: #fff;
   font-size: var(--font-size);
 
-  & div {
+  & div:not(.passwordField) {
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 1fr;
     place-items: center;
 
-    & input {
-      border: 1px solid var(--darker-color-a30);
-      padding: 0.7em;
-      font-size: var(--font-size-little);
-      border-radius:10px;
+    &.cta {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
     }
+  }
+
+  & input {
+    border: 1px solid var(--darker-color-a30);
+    padding: 0.7em;
+    font-size: var(--font-size-little);
+    border-radius: 10px;
   }
 
   .error {
     background-color: var(--primary-color);
     padding: 1rem;
     border-radius: 5px;
+    text-align: center;
   }
 `;
 

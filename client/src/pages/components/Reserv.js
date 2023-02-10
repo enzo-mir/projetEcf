@@ -20,6 +20,7 @@ export default function Reserv({ res }) {
   const [resError, setResError] = useState("");
   const [showAllergy, setShowAllergy] = useState(false);
   const [alergy, setAlergy] = useState();
+  const [timeLapsJourney, setTimelapsJourney] = useState();
 
   useEffect(() => {
     query().then((data) => setFet(data.heures));
@@ -51,13 +52,17 @@ export default function Reserv({ res }) {
     "21h30",
   ];
   function selectHours(e) {
+    let parentToGetJourney =
+      e.target.parentNode.parentNode.parentNode.getAttribute("id");
+    let getJourney = parentToGetJourney.slice(
+      0,
+      parentToGetJourney.indexOf("Hours")
+    );
     let oldTarget = document.querySelector(".selected");
-    // eslint-disable-next-line no-unused-expressions
-    oldTarget ? oldTarget.removeAttribute("class") : null;
-    setTimeout(() => {
-      let target = e.target;
-      target.classList.add("selected");
-    }, 200);
+    if (oldTarget) oldTarget.removeAttribute("class");
+    let target = e.target;
+    target.classList.add("selected");
+    setTimelapsJourney(getJourney);
   }
   function returnData(time) {
     switch (time) {
@@ -107,21 +112,30 @@ export default function Reserv({ res }) {
           if (name !== undefined) {
             if (hourTargeted !== null) {
               if (alergy) {
-                setResError("Votre réservation à bien été pris en compte");
                 postReservation(
                   guests,
                   date,
                   email,
                   name,
                   hourTargeted,
-                  alergy
-                );
-                e.target.style.pointerEvents = "none";
-
-                setTimeout(() => {
-                  e.target.style.pointerEvents = "auto";
-                  res(false);
-                }, 2000);
+                  alergy,
+                  timeLapsJourney
+                )
+                  .then((res) => res.json())
+                  .then(async (data) => {
+                    await data;
+                    console.log(data);
+                    if (Object.keys(data) == "error") {
+                      setResError(data.error);
+                    } else {
+                      setResError("Réservation validé !");
+                    }
+                    e.target.style.pointerEvents = "none";
+                    setTimeout(() => {
+                      e.target.style.pointerEvents = "auto";
+                      res(false);
+                    }, 6000);
+                  });
               } else {
                 setResError("Votre réservation à bien été pris en compte");
                 postReservation(guests, date, email, name, hourTargeted, "");

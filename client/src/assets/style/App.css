@@ -131,7 +131,7 @@ table {
   --font-size-bigger: clamp(18px, 3vw, 30px);
   --font-size-h1: clamp(20px, 7.5vw, 60px);
   --font-size-reg: clamp(15px, 2.5vw, 25px);
-  --font-size-little: clamp(10px, 2vw, 14px);
+  --font-size-little: clamp(13px, 2vw, 14px);
   --primary-color: #ffebcc;
   --primary-color-a50: hsla(36, 100%, 90%, 0.5);
   --primary-color-a30: hsla(36, 100%, 90%, 0.3);
@@ -140,4 +140,27 @@ table {
   --darker-color-a30: hsla(35, 57%, 36%, 0.3);
   --color-whiteless: rgba(255, 255, 255, 0.5);
   --color-blackless: rgba(0, 0, 0, 0.5);
+}
+
+@media (width <= 800px) {
+  #root footer table,
+  #root footer nav {
+    width: 50% !important;
+  }
+}
+@media (width <= 500px) {
+  #root footer table,
+  #root footer nav {
+    width: 100% !important;
+  }
+
+  section:has(button) {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  section:has(button) .imagesGalery{
+    grid-template-columns: 1fr !important;
+  }
 }

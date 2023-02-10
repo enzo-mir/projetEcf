@@ -5,11 +5,50 @@ import Log from "../components/Log";
 import { Wrapper } from "../../assets/style/headerStyle";
 import { userData } from "../../data/Connect";
 import ProfilComponent from "./ProfilComponent";
+import styled from "styled-components";
+import hamburgerBtn from "../../assets/images/barre-de-menu.png";
 
 const Header = ({ isConnected, display }) => {
   const [logPage, setLogPage] = useState(false);
   const [profilPage, setProfilPage] = useState(false);
   const [togglePage, setTogglePage] = useState("");
+  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth);
+  const [responsiveMenu, setResponsiveMenu] = useState(
+    window.innerWidth <= 600 ? true : false
+  );
+
+  window.onresize = (e) => {
+    setWindowsWidth(e.target.innerWidth);
+    setResponsiveMenu(window.matchMedia("(width <= 600px)").matches);
+  };
+
+  const NavMenu = () => {
+    return (
+      <NavContent>
+        <ul>
+          <li>
+            <Link to="/">Accueil</Link>
+          </li>
+          <li>
+            <Link to="/carte">Carte</Link>
+          </li>
+          <li>
+            <button className="btnReserve">Réserver</button>
+          </li>
+        </ul>
+      </NavContent>
+    );
+  };
+
+  const MobilMenu = () => {
+    return (
+      <>
+        <BtnMenu />
+        <NavMenu />
+      </>
+    );
+  };
+
   return display ? (
     <>
       {logPage ? (
@@ -20,19 +59,7 @@ const Header = ({ isConnected, display }) => {
         <div className="imgContainer">
           <img src={icon} alt="Icon du site" />
         </div>
-        <nav className="navBar">
-          <ul>
-            <li>
-              <Link to="/">Accueil</Link>
-            </li>
-            <li>
-              <Link to="/carte">Carte</Link>
-            </li>
-            <li>
-              <button className="btnReserve">Réserver</button>
-            </li>
-          </ul>
-        </nav>
+        {!responsiveMenu ? <NavMenu /> : null}
         <div className="profil">
           {!isConnected ? (
             <>
@@ -61,9 +88,28 @@ const Header = ({ isConnected, display }) => {
             </button>
           )}
         </div>
+        {responsiveMenu ? <MobilMenu /> : null}
       </Wrapper>
     </>
   ) : null;
 };
+
+const BtnMenu = styled.span`
+  width: 32px;
+  height: 32px;
+  background-image: url("${hamburgerBtn}");
+  margin-inline: 1em;
+`;
+
+const NavContent = styled.nav`
+  
+  top: 0px;
+  right: 0px;
+  width: 100vw;
+  height: 100vh;
+  ul {
+    flex-direction: column;
+  }
+`;
 
 export default Header;

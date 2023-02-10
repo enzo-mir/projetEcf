@@ -113,7 +113,7 @@ export default function Carte() {
     <>
       {res && <Reserv res={setRes} />}
       <CarteContainer>
-        <h1>La carte des menus</h1>
+        <h1>La carte</h1>
         <MenuContainer>
           <LunchSection>
             {mapingSimilarityFood(entree, "les entrées")}

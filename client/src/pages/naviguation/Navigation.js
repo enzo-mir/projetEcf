@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import PrivateRoute from "./PrivateRoute";
 import Connect from "../../data/Connect";
 import UndifinedRoute from "../UndifinedPage";
+import { imagesFetched } from "../../data/fetchImage";
 
 const Navigation = ({ connected, admin }) => {
   const [isConnected, setIsConnected] = useState(connected);

@@ -1,5 +1,13 @@
-const postReservation = (convives, date, email, nom, heures, allergies) => {
-  fetch("/res", {
+const postReservation = (
+  convives,
+  date,
+  email,
+  nom,
+  heures,
+  allergies,
+  timeJourney
+) => {
+  let post = fetch("/res", {
     method: "POST",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -13,8 +21,10 @@ const postReservation = (convives, date, email, nom, heures, allergies) => {
       nom: nom,
       heures: heures,
       allergies: allergies,
+      timeJourney: timeJourney,
     }),
   });
+  return post;
 };
 
 export default postReservation;

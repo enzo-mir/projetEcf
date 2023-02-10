@@ -37,38 +37,48 @@ const Log = ({ displayPage, togglePage }) => {
     var emailRegex = new RegExp(
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
     );
+    var pwdRegex = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/);
     var alergyRegex = nameRegex;
     var guestsRegex = new RegExp(/^([1-9])$/);
 
     if (nameRegex.test(values[0]) && values[0]) {
       if (emailRegex.test(values[1]) && values[1]) {
         if (pwdConfirmation === null && values[2]) {
-          if (guestsRegex.test(values[3]) && values[3]) {
-            if (alergyRegex.test(values[4])) {
-              postCreateAccount(
-                values[0],
-                values[1],
-                values[2],
-                values[3],
-                values[4]
-              ).then((data) =>
-                Object.keys(data) == "error"
-                  ? setFormConfirmation(Object.values(data))
-                  : (setFormConfirmation("Le compte a été créé !"),
-                    (event.target.style.pointerEvents = "none"),
-                    setTimeout(() => {
-                      displayPage(false);
-                      event.target.style.pointerEvents = "auto";
-                    }, 2000))
-              );
+          if (pwdRegex.test(values[2]) && values[2]) {
+            if (guestsRegex.test(values[3]) && values[3]) {
+              if (alergyRegex.test(values[4])) {
+                postCreateAccount(
+                  values[0],
+                  values[1],
+                  values[2],
+                  values[3],
+                  values[4]
+                ).then((data) =>
+                  Object.keys(data) == "error"
+                    ? setFormConfirmation(Object.values(data))
+                    : (setFormConfirmation("Le compte a été créé !"),
+                      event != null
+                        ? (event.target.style.pointerEvents = "none")
+                        : null,
+                      setTimeout(() => {
+                        displayPage(false);
+                        if (event != null)
+                          event.target.style.pointerEvents = "auto";
+                      }, 2000))
+                );
+              } else
+                setFormConfirmation(
+                  "aucuns caractères spéciaux ni numériques dans les alèrgies"
+                );
             } else
               setFormConfirmation(
-                "aucuns caractères spéciaux ni numériques dans les alèrgies"
+                "le nombres de convives doit être entre 1 et 9 compris"
               );
-          } else
+          } else {
             setFormConfirmation(
-              "le nombres de convives doit être entre 1 et 9 compris"
+              "le mot de passe doit être composé d'une majuscule, minuscule, d'un chiffre et avoir une longueur de 8 charactères"
             );
+          }
         } else
           setFormConfirmation(
             pwdConfirmation ? pwdConfirmation : "champs mot de passe vide"
@@ -91,15 +101,22 @@ const Log = ({ displayPage, togglePage }) => {
             : null,
           window.localStorage.setItem("userLogin", JSON.stringify(data)),
           (window.location.href = "/"),
-          (event.target.style.pointerEvents = "none"),
+          event !== null ? (event.target.style.pointerEvents = "none") : null,
           setTimeout(() => {
-            event.target.style.pointerEvents = "auto";
+            if (event !== null) event.target.style.pointerEvents = "auto";
             displayPage(false);
           }, 2000))
         : (window.localStorage.setItem("adminLogin", JSON.stringify(data)),
           (window.location.href = "/admin"),
           displayPage(false))
     );
+  }
+
+  function contentLoaded(e, currentPage) {
+    if (e.code === "Enter") {
+      if (currentPage === "sign") submitSignIn(signinData, null);
+      if (currentPage === "log") submitLogin(loginEmail, loginPassword, null);
+    }
   }
   return (
     <Overlay onClick={() => displayPage(false)}>
@@ -108,7 +125,7 @@ const Log = ({ displayPage, togglePage }) => {
           <>
             <h1>Inscrivez-vous</h1>
             {fromConfirmation ? <p>{fromConfirmation}</p> : null}
-            <ContentSignIn>
+            <ContentSignIn onKeyUp={(e) => contentLoaded(e, "sign")}>
               <div className="profil">
                 <input
                   type="text"
@@ -131,7 +148,9 @@ const Log = ({ displayPage, togglePage }) => {
                   onChange={(e) => {
                     setSigninPassword(e.target.value);
                     e.target.value !== e.target.parentNode.children[1].value
-                      ? setPwdConfirmation("mot de passe non conforme")
+                      ? setPwdConfirmation(
+                          "le mot de passe et la confiramtion du mot de passe ne correspondent pas"
+                        )
                       : setPwdConfirmation(null);
                   }}
                 />
@@ -141,7 +160,9 @@ const Log = ({ displayPage, togglePage }) => {
                   autoComplete="current-password"
                   onChange={(e) => {
                     e.target.value !== e.target.parentNode.firstChild.value
-                      ? setPwdConfirmation("mot de passe non conforme")
+                      ? setPwdConfirmation(
+                          "le mot de passe et la confiramtion du mot de passe ne correspondent pas"
+                        )
                       : setPwdConfirmation(null);
                   }}
                 />
@@ -168,6 +189,13 @@ const Log = ({ displayPage, togglePage }) => {
               <p
                 onClick={() => {
                   setPage("login");
+                  setFormConfirmation("");
+                  setPwdConfirmation("");
+                  setSigninAlergy("");
+                  setSigninEmail("");
+                  setSigninGuests("");
+                  setSigninName("");
+                  setSigninPassword("");
                 }}
               >
                 vous avez déjà un compte ? connectez-vous
@@ -179,7 +207,7 @@ const Log = ({ displayPage, togglePage }) => {
             <h1>Connectez-vous</h1>
             {loginConfirmation ? <p>{loginConfirmation}</p> : null}
 
-            <ContentLogIn>
+            <ContentLogIn onKeyUp={(e) => contentLoaded(e, "log")}>
               <input
                 type="text"
                 placeholder="adresse e-mail"
@@ -208,6 +236,9 @@ const Log = ({ displayPage, togglePage }) => {
               <p
                 onClick={() => {
                   setPage("signin");
+                  setLoginConfirmation("");
+                  setLoginEmail("");
+                  setLoginPassword("");
                 }}
               >
                 vous n'avez pas encore de compte ? créez un compte
