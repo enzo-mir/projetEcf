@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const CarteContainer = styled.main`
   position: relative;
-  width: 1000px;
+  max-width: 1000px;
   margin: auto;
   min-height: max-content;
   padding-block: 150px;
@@ -54,14 +54,14 @@ const CarteContainer = styled.main`
 
 const MenuContainer = styled.div`
   position: relative;
-  width: 1000px;
+  max-width: 100%;
+  width: 100vw;
   min-height: max-content;
   display: grid;
   gap: 25px;
   grid-template-columns: repeat(2, 1fr);
 
   & > div {
-    width: 100%;
     height: 100%;
     margin-block: 50px;
 
@@ -71,9 +71,20 @@ const MenuContainer = styled.div`
       font-size: var(--font-size-reg);
     }
   }
+
+  @media screen and (width <= 1050px) {
+    display: flex;
+    flex-direction: column;
+
+    & > div {
+      padding-block: 2em;
+      border-radius: 10px;
+    }
+  }
 `;
 
 const LunchSection = styled.div`
+  width: 100%;
   background-color: #fff;
   grid-area: 1 / 1 / 2 / 2;
   display: flex;
@@ -101,6 +112,7 @@ const LunchSection = styled.div`
   }
 `;
 const PlatSection = styled.div`
+  width: 100%;
   background-color: #fff;
   grid-area: 1 / 2 / 2 / 3;
   display: flex;
@@ -128,13 +140,14 @@ const PlatSection = styled.div`
   }
 `;
 const DessertSection = styled.div`
-  background-color: #fff;
+  width: 100%;
   grid-area: 2 / 1 / 3 / 3;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
   column-gap: 50px;
   place-items: center;
+  background-color: #fff;
 
   h2 {
     grid-area: 1 / 1 / 2 / 3;
@@ -146,14 +159,31 @@ const DessertSection = styled.div`
     column-gap: 20px;
     width: 60%;
   }
+
+  @media screen and (width <= 1050px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    row-gap: 1em;
+
+    & > div {
+      height: 50px;
+      &:last-child {
+        padding-bottom: 50px;
+      }
+    }
+  }
 `;
 const MenuSection = styled.div`
+  width: 100%;
   background-color: #fff;
   grid-area: 3 / 1 / 4 / 3;
   display: flex;
   flex-direction: column;
+  gap: 3vh;
   justify-content: space-around;
   align-items: center;
+
   & > div {
     display: flex;
     flex-direction: column;

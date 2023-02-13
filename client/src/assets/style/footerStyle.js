@@ -76,4 +76,31 @@ export const Wrapper = styled.footer`
       }
     }
   }
+
+  & > p {
+    font-size: var(--font-size-little);
+  }
+
+  @media screen and (width <= 800px) {
+    & nav {
+      width: 50%;
+    }
+    & table#horaires {
+      width: 50%;
+    }
+  }
+
+  @media screen and (width <= 600px) {
+    width: 100%;
+    & nav {
+      width: 100%;
+
+      & ul {
+        width: auto;
+      }
+    }
+    & table#horaires {
+      width: 100%;
+    }
+  }
 `;

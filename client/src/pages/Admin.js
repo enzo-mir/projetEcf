@@ -5,7 +5,6 @@ import adminHoursPost from "../data/adminHoursPost";
 import { carteQuery } from "../data/fetchCarteData";
 import { Overlay } from "../assets/style/overlay";
 import postUpdateCarte from "../data/postUpdateCarte";
-import { imagesFetched } from "../data/fetchImage";
 import AdminEditImages from "./components/AdminEditImages";
 import {
   EditCarteContainer,

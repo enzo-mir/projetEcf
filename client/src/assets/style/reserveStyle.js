@@ -10,8 +10,8 @@ const ReservationContainer = styled.section`
   place-items: center;
   padding-block: 50px;
   width: 1000px;
-  min-height: 60vh;
-  max-width: 100%;
+  max-height: 80vh;
+  overflow-y: scroll;
   z-index: 150;
   background-color: #fff;
   font-size: var(--font-size);
@@ -51,6 +51,9 @@ const ReservationContainer = styled.section`
       grid-area: 2 / 1 / 3 / 3;
     }
   }
+  @media screen and (width <= 600px) {
+    gap: 2vh;
+  }
 `;
 
 const OptionsReserv = styled.div`
@@ -59,7 +62,7 @@ const OptionsReserv = styled.div`
   grid-template-columns: repeat(2, 1fr);
   place-items: center;
   column-gap: 5cqw;
-  row-gap: 3cqh;
+  gap: 3cqh 10vw;
 
   & input {
     position: relative;
@@ -68,12 +71,13 @@ const OptionsReserv = styled.div`
     border: none;
     padding: 5px 0.5em 5px 3em;
     height: 30px;
-    width: 250px;
+    width: clamp(150px, 100%, 250px);
   }
   & span {
     position: absolute;
     top: 0;
     left: 0;
+    transform: translateX(-50%);
     background: url(${guests});
     background-size: 50%;
     background-position: 50%;
@@ -111,6 +115,10 @@ const OptionsReserv = styled.div`
       background-repeat: no-repeat;
     }
   }
+
+  @media screen and (width <= 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const HoursList = styled.ul`
@@ -134,4 +142,4 @@ const HoursList = styled.ul`
   }
 `;
 
-export {OptionsReserv, ReservationContainer, HoursList };
+export { OptionsReserv, ReservationContainer, HoursList };

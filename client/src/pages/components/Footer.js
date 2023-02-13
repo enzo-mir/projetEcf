@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { query } from "../../data/fetchAllData";
 import { Wrapper } from "../../assets/style/footerStyle";
+import Reserv from "./Reserv";
 
 const Footer = () => {
   const [fet, setFet] = useState([]);
+  const [res, setRes] = useState(false);
 
   useEffect(() => {
     query().then((data) => setFet(data.heures));
@@ -12,6 +14,7 @@ const Footer = () => {
 
   return (
     <>
+      {res && <Reserv res={setRes} />}
       <Wrapper>
         <table id="horaires">
           <thead>
@@ -40,7 +43,9 @@ const Footer = () => {
               <Link to="/carte">Carte</Link>
             </li>
             <li>
-              <button className="btnReserve">Réserver</button>
+              <button className="btnReserve" onClick={() => setRes(true)}>
+                Réserver
+              </button>
             </li>
           </ul>
         </nav>

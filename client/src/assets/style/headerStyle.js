@@ -1,20 +1,39 @@
 import styled from "styled-components";
+import hamburgerBtn from "../images/barre-de-menu.png";
 
-export const Wrapper = styled.header`
+const Wrapper = styled.header`
   position: fixed;
   width: 100%;
   height: 100px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   background-color: var(--primary-color);
   z-index: 50;
 
   & .imgContainer {
-    padding-inline: 1em;
+    padding: 1em;
   }
+`;
+const BtnMenu = styled.span`
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background-image: url("${hamburgerBtn}");
+  margin: 2em 1em;
+  right: 0px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
   & nav {
+    margin-left: auto;
     width: max-content;
 
     & ul {
@@ -41,9 +60,51 @@ export const Wrapper = styled.header`
   }
 
   & .profil {
+    margin-left: auto;
     display: flex;
     justify-content: center;
     column-gap: 2vw;
     padding-inline: 1em;
   }
+
+  &.mobilHeader {
+    background-color: var(--primary-color);
+    position: absolute;
+    top: 100px;
+    flex-direction: column;
+    row-gap: 3vh;
+    padding-block: 0em;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.15s ease;
+
+    &.display {
+      transition: all 0.3s ease;
+      height: 265px;
+      padding-block: 1em;
+    }
+
+    a,
+    button {
+      font-size: var(--font-size-reg);
+    }
+
+    nav {
+      margin-inline: auto;
+      margin-top: auto;
+      ul {
+        flex-direction: column;
+        row-gap: 3vh;
+      }
+    }
+
+    .profil {
+      margin-inline: auto;
+      flex-direction: column;
+      row-gap: 3vh;
+      padding: 0;
+    }
+  }
 `;
+
+export { Wrapper, BtnMenu, HeaderContainer };

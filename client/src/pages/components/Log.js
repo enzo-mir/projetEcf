@@ -7,7 +7,6 @@ import {
 } from "../../assets/style/logStyle";
 import postCreateAccount from "../../data/postCreateAccount";
 import postConnection from "../../data/postConnection";
-import Navigation from "../naviguation/Navigation";
 
 const Log = ({ displayPage, togglePage }) => {
   const [page, setPage] = useState(togglePage);
@@ -144,7 +143,6 @@ const Log = ({ displayPage, togglePage }) => {
                 <input
                   type="password"
                   placeholder="mot de passe"
-                  autoComplete="new-password"
                   onChange={(e) => {
                     setSigninPassword(e.target.value);
                     e.target.value !== e.target.parentNode.children[1].value
@@ -157,7 +155,6 @@ const Log = ({ displayPage, togglePage }) => {
                 <input
                   type="password"
                   placeholder="confirmation mot de passe"
-                  autoComplete="current-password"
                   onChange={(e) => {
                     e.target.value !== e.target.parentNode.firstChild.value
                       ? setPwdConfirmation(
@@ -219,7 +216,6 @@ const Log = ({ displayPage, togglePage }) => {
               <input
                 type="password"
                 placeholder="mot de passe"
-                autoComplete="current-password"
                 onChange={(e) => {
                   setLoginPassword(e.target.value);
                 }}

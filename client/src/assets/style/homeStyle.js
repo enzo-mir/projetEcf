@@ -73,24 +73,28 @@ const ContextText = styled.div`
 
 const SectionPlats = styled.section`
   position: relative;
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 0.75fr;
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
   row-gap: 10vh;
-  width: clamp(500px, 60%, 1400px);
+  width: clamp(100%, 60%, 1400px);
 
   & .imagesGalery {
     display: grid;
     width: 100%;
     grid-area: 1 / 1 / 3 / 2;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 250px));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 250px));
     place-items: center;
+    justify-content: center;
     margin-bottom: auto;
     gap: 25px;
+
     & div {
       position: relative;
       text-align: center;
+
       &:hover {
         & span {
           color: #fff;
@@ -122,9 +126,14 @@ const SectionPlats = styled.section`
       border-radius: 10px;
       transition: 0.15s ease-out;
     }
+    @media screen and (width <= 600px) {
+      width: 100%;
+      grid-template-columns: 100%;
+    }
   }
 
   & > p {
+    width: 90%;
     grid-area: 1 / 2 / 2 / 3;
     text-align: center;
     font-size: var(--font-size);
@@ -138,6 +147,13 @@ const SectionPlats = styled.section`
     margin-bottom: auto;
     padding: 1em 0.5em;
     font-size: var(--font-size);
+  }
+
+  @media screen and (width <= 600px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 `;
 

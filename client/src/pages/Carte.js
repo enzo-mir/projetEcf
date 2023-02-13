@@ -22,11 +22,6 @@ export default function Carte() {
     window.localStorage.clear("adminLogin");
 
   useEffect(() => {
-    document.querySelectorAll(".btnReserve").forEach((resBtn) => {
-      resBtn.addEventListener("click", () => {
-        setRes(true);
-      });
-    });
     carteQuery().then((data) => {
       setCarteFetched(data);
       setEntree(data.entree);
@@ -94,11 +89,7 @@ export default function Carte() {
                 <p>Formules : </p>
                 <aside>
                   {element.formule.split(",").map((formule, index) => {
-                    return (
-                      <>
-                        <div key={index}>{formule}</div>
-                      </>
-                    );
+                    return <div key={index}>{formule}</div>;
                   })}
                 </aside>
               </article>

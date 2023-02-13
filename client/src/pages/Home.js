@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import heroImage from "../assets/images/heroImage.jpg";
 import Reserv from "./components/Reserv";
-import { imagesFetched } from "../data/fetchImage";
 import { query } from "../data/fetchAllData";
 
 import {
@@ -17,12 +16,6 @@ const Home = () => {
 
   if (window.localStorage.getItem("adminLogin"))
     window.localStorage.clear("adminLogin");
-
-  document.querySelectorAll(".btnReserve").forEach((resBtn) => {
-    resBtn.addEventListener("click", () => {
-      setRes(true);
-    });
-  });
 
   useEffect(() => {
     query().then((image) => setImagesApi(image.image));
@@ -67,7 +60,9 @@ const Home = () => {
                 })
               : null}
           </div>
-          <button className="btnReserve">Réservez une table</button>
+          <button className="btnReserve" onClick={() => setRes(true)}>
+            Réservez une table
+          </button>
         </SectionPlats>
       </Wrapper>
     </>

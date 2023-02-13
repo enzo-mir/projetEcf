@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import { Link } from "react-router-dom";
 import icon from "../../assets/images/icon.svg";
 import Log from "../components/Log";
-import { Wrapper } from "../../assets/style/headerStyle";
+import {
+  Wrapper,
+  HeaderContainer,
+  BtnMenu,
+} from "../../assets/style/headerStyle";
 import { userData } from "../../data/Connect";
 import ProfilComponent from "./ProfilComponent";
 import styled from "styled-components";
-import hamburgerBtn from "../../assets/images/barre-de-menu.png";
+import Reserv from "./Reserv";
 
 const Header = ({ isConnected, display }) => {
   const [logPage, setLogPage] = useState(false);
   const [profilPage, setProfilPage] = useState(false);
+  const [res, setRes] = useState(false);
   const [togglePage, setTogglePage] = useState("");
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth);
   const [responsiveMenu, setResponsiveMenu] = useState(
@@ -22,44 +27,34 @@ const Header = ({ isConnected, display }) => {
     setResponsiveMenu(window.matchMedia("(width <= 600px)").matches);
   };
 
+  document.onmouseup = (e) => {
+    let obj = document.querySelector("header");
+    let dropDownContent = obj.children[1];
+    if (dropDownContent.classList.contains("display")) {
+      if (!obj.contains(e.target)) {
+        dropDownContent.classList.remove("display");
+      }
+    }
+  };
+
   const NavMenu = () => {
     return (
-      <NavContent>
-        <ul>
-          <li>
-            <Link to="/">Accueil</Link>
-          </li>
-          <li>
-            <Link to="/carte">Carte</Link>
-          </li>
-          <li>
-            <button className="btnReserve">Réserver</button>
-          </li>
-        </ul>
-      </NavContent>
-    );
-  };
-
-  const MobilMenu = () => {
-    return (
-      <>
-        <BtnMenu />
-        <NavMenu />
-      </>
-    );
-  };
-
-  return display ? (
-    <>
-      {logPage ? (
-        <Log displayPage={setLogPage} togglePage={togglePage} />
-      ) : null}
-      {profilPage ? <ProfilComponent displayProfil={setProfilPage} /> : null}
-      <Wrapper>
-        <div className="imgContainer">
-          <img src={icon} alt="Icon du site" />
-        </div>
-        {!responsiveMenu ? <NavMenu /> : null}
+      <HeaderContainer className={responsiveMenu ? "mobilHeader" : null}>
+        <NavContent>
+          <ul>
+            <li>
+              <Link to="/">Accueil</Link>
+            </li>
+            <li>
+              <Link to="/carte">Carte</Link>
+            </li>
+            <li>
+              <button className="btnReserve" onClick={() => setRes(true)}>
+                Réserver
+              </button>
+            </li>
+          </ul>
+        </NavContent>
         <div className="profil">
           {!isConnected ? (
             <>
@@ -88,28 +83,57 @@ const Header = ({ isConnected, display }) => {
             </button>
           )}
         </div>
-        {responsiveMenu ? <MobilMenu /> : null}
+      </HeaderContainer>
+    );
+  };
+
+  const MobilMenu = () => {
+    return (
+      <>
+        <NavMenu />
+        <BtnMenu
+          onClick={(e) => {
+            e.target.parentNode.children[1].classList.toggle("display");
+            let elemLink = Object.values(
+              e.target.parentNode.children[1].children
+            );
+
+            elemLink.map((el) => {
+              Object.values(el.querySelectorAll("a")).map((a) => {
+                a.onclick = () =>
+                  document
+                    .querySelector(".display")
+                    .classList.remove("display");
+              });
+              Object.values(el.querySelectorAll("button")).map((button) => {
+                button.onclick = () =>
+                  document
+                    .querySelector(".display")
+                    .classList.remove("display");
+              });
+            });
+          }}
+        />
+      </>
+    );
+  };
+
+  return display ? (
+    <>
+      {logPage && <Log displayPage={setLogPage} togglePage={togglePage} />}
+      {profilPage && <ProfilComponent displayProfil={setProfilPage} />}
+      {res && <Reserv res={setRes} />}
+
+      <Wrapper>
+        <div className="imgContainer">
+          <img src={icon} alt="Icon du site" />
+        </div>
+        {!responsiveMenu ? <NavMenu /> : <MobilMenu />}
       </Wrapper>
     </>
   ) : null;
 };
 
-const BtnMenu = styled.span`
-  width: 32px;
-  height: 32px;
-  background-image: url("${hamburgerBtn}");
-  margin-inline: 1em;
-`;
-
-const NavContent = styled.nav`
-  
-  top: 0px;
-  right: 0px;
-  width: 100vw;
-  height: 100vh;
-  ul {
-    flex-direction: column;
-  }
-`;
+const NavContent = styled.nav``;
 
 export default Header;

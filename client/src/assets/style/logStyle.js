@@ -38,6 +38,10 @@ const LogContainer = styled.section`
         cursor: pointer;
       }
     }
+
+    @media screen and (width <= 600px) {
+      flex-direction: column;
+    }
   }
 `;
 
