@@ -34,11 +34,14 @@ var con = mysql.createConnection({
   password: "5()Amg9709",
   database: "enzmrg_db",
 }); */
-var viergeConnection = mysql.createConnection({
+let bddConfig = {
   host: "localhost",
   user: "root",
   password: "",
-});
+};
+
+var viergeConnection = mysql.createConnection(bddConfig);
+
 
 app.get("/api", (req, res) => {
   viergeConnection.connect((error) => {
@@ -47,12 +50,12 @@ app.get("/api", (req, res) => {
 
   /* CREATE A NEW CONNECTION WITH DB : ecfprojet*/
 
-  let connectionNew = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "ecfprojet",
+
+  Object.defineProperty(bddConfig, "database", {
+    value: "ecfprojet",
   });
+
+  let connectionNew = mysql.createConnection(bddConfig);
 
   /* CREATE NEW TABLE FOR AUTH ACCESS AND INSERT DEFAULT VALUE */
 
